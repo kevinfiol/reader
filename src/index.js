@@ -6,62 +6,60 @@
  *
  */
 
-const fetch = require("node-fetch");
-const Parser = require("rss-parser");
+import { readFileSync, writeFileSync } from 'fs';
+import { join, dirname } from 'path';
+import { fileURLToPath } from 'url';
+
+import { get } from 'httpie';
+import Parser from 'rss-parser';
+import { compile } from 'yeahjs';
+
+const FEEDS_JSON = './feeds.json';
+const INPUT_TEMPLATE = './template.html';
+const OUTPUT_FILE = '../output/index.html';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const feeds = JSON.parse(readFileSync(join(__dirname, FEEDS_JSON), { encoding: 'utf8' }));
+
 const parser = new Parser();
-
-const nunjucks = require("nunjucks");
-const env = nunjucks.configure({ autoescape: true });
-
-const feeds = require("./feeds.json");
-
-env.addFilter("formatDate", function(dateString) {
-  const formattedDate = new Date(dateString).toLocaleDateString()
-  return formattedDate !== 'Invalid Date' ? formattedDate : dateString;
-});
-
-env.addGlobal('now', (new Date()).toUTCString() );
+const template = readFileSync(join(__dirname, INPUT_TEMPLATE), { encoding: 'utf8' });
+const render = compile(template, { localsName: 'it' });
 
 // parse XML or JSON feeds
 function parseFeed(response) {
-  const contentType = response.headers.get("content-type")
-    ? response.headers.get("content-type").split(";")[0]
+  const contentType = response.headers['content-type']
+    ? response.headers['content-type'].split(";")[0]
     : false;
 
-  const rssFeed = [contentType]
-    .map(item =>
-      [
-        "application/atom+xml",
-        "application/rss+xml",
-        "application/xml",
-        "text/xml",
-        "text/html" // this is kind of a gamble
-      ].includes(item)
-        ? response.text()
-        : false
-    )
-    .filter(_ => _)[0];
+  if (!contentType) return false;
 
-  const jsonFeed = [contentType]
-    .map(item =>
-      ["application/json"].includes(item) ? response.json() : false
-    )
-    .filter(_ => _)[0];
+  const contentTypes = [
+    'application/json',
+    'application/atom+xml',
+    'application/rss+xml',
+    'application/xml',
+    'text/xml',
+    'text/html' // this is kind of a gamble
+  ];
 
-  return rssFeed || jsonFeed || false;
+  if (contentTypes.includes(contentType)) {
+    return response.data;
+  }
+
+  return false;
 }
 
 (async () => {
   const contentFromAllFeeds = {};
   const errors = [];
 
-  for (group in feeds) {
+  for (const group in feeds) {
     contentFromAllFeeds[group] = [];
 
     for (let index = 0; index < feeds[group].length; index++) {
       try {
-        const response = await fetch(feeds[group][index]);
-        const body = await parseFeed(response);
+        const response = await get(feeds[group][index]);
+        const body = parseFeed(response);
         const contents =
           typeof body === "string" ? await parser.parseString(body) : body;
 
@@ -71,9 +69,12 @@ function parseFeed(response) {
         
         // try to normalize date attribute naming
         contents.items.forEach(item => {
-          const timestamp = new Date(item.pubDate || item.isoDate || item.date).getTime();          
+          const timestamp = new Date(item.pubDate || item.isoDate || item.date).getTime();
           item.timestamp = isNaN(timestamp) ? (item.pubDate || item.isoDate || item.date) : timestamp;
-        });        
+
+          const formattedDate = new Date(item.timestamp).toLocaleDateString()
+          item.timestamp = formattedDate !== 'Invalid Date' ? formattedDate : dateString;
+        });
 
       } catch (error) {
         errors.push(feeds[group][index]);
@@ -81,9 +82,8 @@ function parseFeed(response) {
     }
   }
 
-  const output = env.render("./src/template.html", {
-    data: contentFromAllFeeds,
-    errors: errors
-  });
-  console.log(output);
+  const now = (new Date()).toUTCString();
+  const groups = Object.entries(contentFromAllFeeds);
+  const html = render({ groups, now, errors });
+  writeFileSync(join(__dirname, OUTPUT_FILE), html, { encoding: 'utf8' });
 })();

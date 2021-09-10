@@ -11,38 +11,37 @@
 
   <h1>🦉 Bubo Reader</h1>
 
-  {% for group, feeds in data %}    
-  <h2>{{ group }}</h2>
-    {% for feed  in feeds %} 
+  <% for (let group of it.groups) { %>
+    <h2><%= group[0] %></h2>
+    <% for (let feed of group[1]) { %>
       <details>
         <summary>
-          <span class="feed-title">{{ feed.title }}</span> 
-          <span class="feed-url">({{ feed.feed }})</span>
+          <span class="feed-title"><%= feed.title %></span> 
+          <span class="feed-url">(<%= feed.feed %>)</span>
         </summary>
         <ul>
-          {% for item in feed.items %}
-            <li>              
-              {{ item.timestamp | formatDate }} - <a href="{{ item.link }}" target='_blank' rel='noopener norefferer nofollow'>{{ item.title }}</a>
+          <% for (let item of feed.items) { %>
+            <li>
+              <%= item.timestamp %> - <a href="<%= item.link %>" target='_blank' rel='noopener norefferer nofollow'><%= item.title %></a>
             </li>
-          {% endfor %}
+          <% } %>
         </ul>
       </details>
-    {% endfor %}
-  {% endfor %}  
+    <% } %>
+  <% } %>
 
-  {% if errors | length > 0 %}
+  <% if (it.errors.length > 0) { %>
     <h2>Errors</h2>
     <p>There were errors trying to parse these feeds:</p>
     <ul>
-    {% for error in errors %}
-      <li>{{ error }}</li>
-    {% endfor %}
+    <% for (let error of it.errors) { %>
+      <li><%= error %></li>
+    <% } %>
     </ul>
-  {% endif %}
-
+  <% } %>
   <hr>
   <p>
-    Last updated {{ now }}. Powered by <a href="https://github.com/georgemandis/bubo-rss">Bubo Reader</a>, a project by <a href="https://george.mand.is">George Mandis</a>
+    Last updated <%= it.now %>. Powered by <a href="https://github.com/georgemandis/bubo-rss">Bubo Reader</a>, a project by <a href="https://george.mand.is">George Mandis</a>
   </p>
 </body>
 </html>
