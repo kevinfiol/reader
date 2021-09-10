@@ -11,7 +11,7 @@
     "build": "node src/index.js"
   },
   "author": "kevinfiol",
-  "license": "MIT",
+  "license": "ISC",
   "dependencies": {
     "httpie": "^1.1.2",
     "rss-parser": "^3.6.3",
