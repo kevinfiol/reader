@@ -53,37 +53,41 @@ function parseFeed(response) {
   const contentFromAllFeeds = {};
   const errors = [];
 
-  for (const group in feeds) {
-    contentFromAllFeeds[group] = [];
+  // for (const group in feeds) {
+  //   contentFromAllFeeds[group] = [];
 
-    for (let index = 0; index < feeds[group].length; index++) {
-      try {
-        const response = await get(feeds[group][index]);
-        const body = parseFeed(response);
-        const contents =
-          typeof body === "string" ? await parser.parseString(body) : body;
+  //   for (let index = 0; index < feeds[group].length; index++) {
+  //     try {
+  //       const response = await get(feeds[group][index]);
+  //       const body = parseFeed(response);
+  //       const contents =
+  //         typeof body === "string" ? await parser.parseString(body) : body;
 
-        contents.feed = feeds[group][index];
-        contents.title = contents.title ? contents.title : contents.link;
-        contentFromAllFeeds[group].push(contents);
+  //       contents.feed = feeds[group][index];
+  //       contents.title = contents.title ? contents.title : contents.link;
+  //       contentFromAllFeeds[group].push(contents);
         
-        // try to normalize date attribute naming
-        contents.items.forEach(item => {
-          const timestamp = new Date(item.pubDate || item.isoDate || item.date).getTime();
-          item.timestamp = isNaN(timestamp) ? (item.pubDate || item.isoDate || item.date) : timestamp;
+  //       // try to normalize date attribute naming
+  //       contents.items.forEach(item => {
+  //         const timestamp = new Date(item.pubDate || item.isoDate || item.date).getTime();
+  //         item.timestamp = isNaN(timestamp) ? (item.pubDate || item.isoDate || item.date) : timestamp;
 
-          const formattedDate = new Date(item.timestamp).toLocaleDateString()
-          item.timestamp = formattedDate !== 'Invalid Date' ? formattedDate : dateString;
-        });
+  //         const formattedDate = new Date(item.timestamp).toLocaleDateString()
+  //         item.timestamp = formattedDate !== 'Invalid Date' ? formattedDate : dateString;
+  //       });
 
-      } catch (error) {
-        errors.push(feeds[group][index]);
-      }
-    }
-  }
+  //     } catch (error) {
+  //       errors.push(feeds[group][index]);
+  //     }
+  //   }
+  // }
+
+  const testJson = JSON.parse(readFileSync(join(__dirname, './data.json'), { encoding: 'utf8' }));
 
   const now = (new Date()).toUTCString();
-  const groups = Object.entries(contentFromAllFeeds);
+  // const groups = Object.entries(contentFromAllFeeds);
+  const groups = Object.entries(testJson);
   const html = render({ groups, now, errors });
   writeFileSync(join(__dirname, OUTPUT_FILE), html, { encoding: 'utf8' });
+  writeFileSync(join(__dirname, './data.json'), JSON.stringify(contentFromAllFeeds), 'utf8');
 })();

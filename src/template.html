@@ -5,43 +5,73 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>🦉 Bubo Reader</title>
+  <!-- <link rel="stylesheet" type="text/css" href="./tufte.min.css"> -->
   <link rel="stylesheet" href="/style.css">
 </head>
 <body>
-
-  <h1>🦉 Bubo Reader</h1>
-
-  <% for (let group of it.groups) { %>
-    <h2><%= group[0] %></h2>
-    <% for (let feed of group[1]) { %>
-      <details>
-        <summary>
-          <span class="feed-title"><%= feed.title %></span> 
-          <span class="feed-url">(<%= feed.feed %>)</span>
-        </summary>
+  <div class="app">
+    <div class="sidebar">
+      <header>
+        <h1>🦉 Bubo Reader</h1>
         <ul>
-          <% for (let item of feed.items) { %>
-            <li>
-              <%= item.timestamp %> - <a href="<%= item.link %>" target='_blank' rel='noopener norefferer nofollow'><%= item.title %></a>
-            </li>
+          <% for (let group of it.groups) { %>
+            <li><a href="#<%= group[0] %>"><%= group[0] %></a></li>
           <% } %>
         </ul>
-      </details>
-    <% } %>
-  <% } %>
+      </header>
 
-  <% if (it.errors.length > 0) { %>
-    <h2>Errors</h2>
-    <p>There were errors trying to parse these feeds:</p>
-    <ul>
-    <% for (let error of it.errors) { %>
-      <li><%= error %></li>
-    <% } %>
-    </ul>
-  <% } %>
-  <hr>
-  <p>
-    Last updated <%= it.now %>. Powered by <a href="https://github.com/georgemandis/bubo-rss">Bubo Reader</a>, a project by <a href="https://george.mand.is">George Mandis</a>
-  </p>
+      <footer>
+        <p>
+          Last updated <%= it.now %>. Powered by <a href="https://github.com/georgemandis/bubo-rss">Bubo Reader</a>, a project by <a href="https://george.mand.is">George Mandis</a>
+        </p>
+      </footer>
+    </div>
+
+    <main>
+      <% for (let group of it.groups) { %>
+        <section id="<%= group[0] %>">
+          <h2><%= group[0] %></h2>
+          <% for (let feed of group[1]) { %>
+            <details open>
+              <summary>
+                <span class="feed-title"><%= feed.title %></span> 
+                <span class="feed-url">(<%= feed.feed %>)</span>
+              </summary>
+              <% for (let item of feed.items) { %>
+                <article class="item">
+                  <header class="item__header">
+                    <a href="<%= item.link %>" target='_blank' rel='noopener norefferer nofollow'>
+                      <%= item.title %>
+                    </a>
+                  </header>
+
+                  <small>
+                    <ul class="article-links">
+                      <li><%= item.timestamp %></li>
+                      <% if (item.comments) { %>
+                        <li><a href="<%= item.comments %>">comments</a></li>
+                      <% } %>
+                      <li><a href="https://outline.com/<%= item.link %>">outline</a></li>
+                      <li><a href="https://text.fish/<%= item.link %>">text.fish</a></li>
+                    </ul>
+                  </small>
+                </article>
+              <% } %>
+            </details>
+          <% } %>
+        </section>
+      <% } %>
+
+      <% if (it.errors.length > 0) { %>
+        <h2>Errors</h2>
+        <p>There were errors trying to parse these feeds:</p>
+        <ul>
+        <% for (let error of it.errors) { %>
+          <li><%= error %></li>
+        <% } %>
+        </ul>
+      <% } %>
+    </main>
+  </div>
 </body>
 </html>

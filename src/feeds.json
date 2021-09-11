@@ -1,11 +1,20 @@
 {
-  "Web Development": [
-    "https://hacks.mozilla.org/feed/"
+  "dailies": [
+    "https://hnrss.org/frontpage?points=10&comments=5",
+    "https://retronauts.com/feed/rss",
+    "https://terrysfreegameoftheweek.com/feed/",
+    "https://a327ex.com/posts/index.xml",
+    "https://fasterthanli.me/index.xml",
+    "https://lexi-lambda.github.io/feeds/all.atom.xml",
+    "https://cprss.s3.amazonaws.com/denoweekly.com.xml",
+    "https://increment.com/feed.xml",
+    "https://merelycurious.me/feed.xml",
+    "https://plurrrr.com/feed.rss",
+    "http://journal.stuffwithstuff.com/rss.xml",
+    "https://blog.skialbainn.com/rss"
   ],
-  "Blogs": [
-    "https://joy.recurse.com/feed.atom"
-  ],
-  "My GitHub Projects": [
-    "https://github.com/georgemandis.atom"
+  "videogames": [
+    "https://reddit-top-rss.herokuapp.com/?subreddit=gog&score=30&view=rss",
+    "https://reddit-top-rss.herokuapp.com/?subreddit=games&score=30&view=rss"
   ]
 }

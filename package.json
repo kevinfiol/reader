@@ -8,7 +8,7 @@
   },
   "main": "src/index.js",
   "scripts": {
-    "build": "node src/index.js"
+    "build": "node src/build.js"
   },
   "author": "kevinfiol",
   "license": "ISC",
