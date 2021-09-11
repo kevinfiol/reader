@@ -1,22 +1,40 @@
 body {
   margin: 0;
   padding: 0;
-  font-family:system-ui;
+  font-family: serif;
   font-size: 16px;
   overflow: hidden;
 }
 
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #151515;
+        color: #ddd;
+    }
 
+    article.item {
+      background-color: rgba(255, 255, 255, 0.025) !important;
+    }
+}
 
-/*details:focus,
-details:focus-within,
-details:hover {
-   background:#ffeb3b; 
-   outline:2px #000 solid; 
-}*/
+h1, h2, h3 {
+  font-family: monospace;
+}
 
-details ul li {
+a:link {
+    color: inherit;
+}
 
+a:visited {
+  color: #b58c8c;
+}
+
+a:hover {
+  opacity: .75;
+}
+
+details {
+  padding: 0.65rem 0;
 }
 
 details[open] summary {
@@ -24,34 +42,81 @@ details[open] summary {
 }
 
 summary {
+  user-select: none;
   cursor:pointer;
+  font-family: monospace;
 }
 
 summary:hover {
   opacity:.75;
 }
 
-.feed-url {
+.group-selector a,
+.group-selector a:visited {
+  color: inherit;
+}
+
+.feed-title {
+  font-weight: 600;
+  font-size: 17px;
+}
+
+.feed-url, .feed-timestamp {
   color:#aaa;
+}
+
+.feed-url {
+  font-size: ;
+}
+
+.feed-timestamp {
+  margin-left: 1.45rem;
+}
+
+.monospace {
+  font-family: monospace;
 }
 
 .app {
   display: flex;
-  gap: 1rem;
+  gap: 2rem;
   padding: 0 0rem 1rem 1rem;
 }
 
 .sidebar {
+  /*font-family: monospace;*/
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+main {
+  flex: 5;
+  height: 100vh;
+  overflow-y: auto;
+  padding-right: 8rem;
 }
 
 article.item {
-  padding: 0.25rem 0;
+  padding: 0.75rem;
+  margin-left: 1.5rem;
+  margin-right: 1.5rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+  background-color: rgba(0, 0, 0, 0.025);
+}
+
+article.item:first-of-type {
+  margin-top: 0;
+}
+
+article.item:last-of-type {
+  margin-bottom: 0;
 }
 
 article.item header.item__header {
   font-size: 17px;
-  font-weight: 600;
 }
 
 ul.article-links {
@@ -64,10 +129,13 @@ ul.article-links > li {
   margin-right: .5rem;
 }
 
-main {
-  flex: 3;
-  height: 100vh;
-  overflow-y: auto;
+footer {
+  opacity: 0.25;
+  font-size: 0.75em;
+}
+
+footer:hover {
+  opacity: 1;
 }
 
 section {

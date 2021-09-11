@@ -4,16 +4,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>🦉 Bubo Reader</title>
-  <!-- <link rel="stylesheet" type="text/css" href="./tufte.min.css"> -->
+  <title>🦉 reader</title>
   <link rel="stylesheet" href="/style.css">
 </head>
 <body>
   <div class="app">
     <div class="sidebar">
       <header>
-        <h1>🦉 Bubo Reader</h1>
-        <ul>
+        <h1>🦉<br/>reader</h1>
+        <ul class="group-selector">
           <% for (let group of it.groups) { %>
             <li><a href="#<%= group[0] %>"><%= group[0] %></a></li>
           <% } %>
@@ -21,8 +20,18 @@
       </header>
 
       <footer>
+        <% if (it.errors.length > 0) { %>
+          <h2>Errors</h2>
+          <p>There were errors trying to parse these feeds:</p>
+          <ul>
+          <% for (let error of it.errors) { %>
+            <li><%= error %></li>
+          <% } %>
+          </ul>
+        <% } %>
+
         <p>
-          Last updated <%= it.now %>. Powered by <a href="https://github.com/georgemandis/bubo-rss">Bubo Reader</a>, a project by <a href="https://george.mand.is">George Mandis</a>
+          Last updated <%= it.now %>. Powered by <a href="https://github.com/georgemandis/bubo-rss">Bubo Reader</a>, a project by <a href="https://george.mand.is">George Mandis</a> and <a href="https://kevinfiol.com">Kevin Fiol</a>.
         </p>
       </footer>
     </div>
@@ -32,10 +41,17 @@
         <section id="<%= group[0] %>">
           <h2><%= group[0] %></h2>
           <% for (let feed of group[1]) { %>
-            <details open>
+            <details>
               <summary>
                 <span class="feed-title"><%= feed.title %></span> 
-                <span class="feed-url">(<%= feed.feed %>)</span>
+                <span class="feed-url">
+                  <small>
+                    (<%= feed.feed %>)
+                  </small>
+                </span>
+                <div class="feed-timestamp">
+                  <small>Latest: <%= feed.items[0].timestamp %></small>
+                </div>
               </summary>
               <% for (let item of feed.items) { %>
                 <article class="item">
@@ -47,7 +63,7 @@
 
                   <small>
                     <ul class="article-links">
-                      <li><%= item.timestamp %></li>
+                      <li class="monospace"><%= item.timestamp %></li>
                       <% if (item.comments) { %>
                         <li><a href="<%= item.comments %>">comments</a></li>
                       <% } %>
@@ -60,16 +76,6 @@
             </details>
           <% } %>
         </section>
-      <% } %>
-
-      <% if (it.errors.length > 0) { %>
-        <h2>Errors</h2>
-        <p>There were errors trying to parse these feeds:</p>
-        <ul>
-        <% for (let error of it.errors) { %>
-          <li><%= error %></li>
-        <% } %>
-        </ul>
       <% } %>
     </main>
   </div>
