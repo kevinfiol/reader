@@ -4,45 +4,80 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>🦉 Bubo Reader</title>
+  <title>🦉 reader</title>
   <link rel="stylesheet" href="/style.css">
 </head>
 <body>
-
-  <h1>🦉 Bubo Reader</h1>
-
-  {% for group, feeds in data %}    
-  <h2>{{ group }}</h2>
-    {% for feed  in feeds %} 
-      <details>
-        <summary>
-          <span class="feed-title">{{ feed.title }}</span> 
-          <span class="feed-url">({{ feed.feed }})</span>
-        </summary>
-        <ul>
-          {% for item in feed.items %}
-            <li>              
-              {{ item.timestamp | formatDate }} - <a href="{{ item.link }}" target='_blank' rel='noopener norefferer nofollow'>{{ item.title }}</a>
-            </li>
-          {% endfor %}
+  <div class="app">
+    <div class="sidebar">
+      <header>
+        <h1>🦉<br/>reader</h1>
+        <ul class="group-selector">
+          <% for (let group of it.groups) { %>
+            <li><a href="#<%= group[0] %>"><%= group[0] %></a></li>
+          <% } %>
         </ul>
-      </details>
-    {% endfor %}
-  {% endfor %}  
+      </header>
 
-  {% if errors | length > 0 %}
-    <h2>Errors</h2>
-    <p>There were errors trying to parse these feeds:</p>
-    <ul>
-    {% for error in errors %}
-      <li>{{ error }}</li>
-    {% endfor %}
-    </ul>
-  {% endif %}
+      <footer>
+        <% if (it.errors.length > 0) { %>
+          <h2>Errors</h2>
+          <p>There were errors trying to parse these feeds:</p>
+          <ul>
+          <% for (let error of it.errors) { %>
+            <li><%= error %></li>
+          <% } %>
+          </ul>
+        <% } %>
 
-  <hr>
-  <p>
-    Last updated {{ now }}. Powered by <a href="https://github.com/georgemandis/bubo-rss">Bubo Reader</a>, a project by <a href="https://george.mand.is">George Mandis</a>
-  </p>
+        <p>
+          Last updated <%= it.now %>. Powered by <a href="https://github.com/georgemandis/bubo-rss">Bubo Reader</a>, a project by <a href="https://george.mand.is">George Mandis</a> and <a href="https://kevinfiol.com">Kevin Fiol</a>.
+        </p>
+      </footer>
+    </div>
+
+    <main>
+      <% for (let group of it.groups) { %>
+        <section id="<%= group[0] %>">
+          <h2><%= group[0] %></h2>
+          <% for (let feed of group[1]) { %>
+            <details>
+              <summary>
+                <span class="feed-title"><%= feed.title %></span> 
+                <span class="feed-url">
+                  <small>
+                    (<%= feed.feed %>)
+                  </small>
+                </span>
+                <div class="feed-timestamp">
+                  <small>Latest: <%= feed.items[0].timestamp %></small>
+                </div>
+              </summary>
+              <% for (let item of feed.items) { %>
+                <article class="item">
+                  <header class="item__header">
+                    <a href="<%= item.link %>" target='_blank' rel='noopener norefferer nofollow'>
+                      <%= item.title %>
+                    </a>
+                  </header>
+
+                  <small>
+                    <ul class="article-links">
+                      <li class="monospace"><%= item.timestamp %></li>
+                      <% if (item.comments) { %>
+                        <li><a href="<%= item.comments %>">comments</a></li>
+                      <% } %>
+                      <li><a href="https://outline.com/<%= item.link %>">outline</a></li>
+                      <li><a href="https://text.fish/<%= item.link %>">text.fish</a></li>
+                    </ul>
+                  </small>
+                </article>
+              <% } %>
+            </details>
+          <% } %>
+        </section>
+      <% } %>
+    </main>
+  </div>
 </body>
 </html>

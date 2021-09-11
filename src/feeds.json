@@ -1,24 +1,20 @@
 {
-  "Web Development": [
-    "https://hacks.mozilla.org/feed/",
-    "https://blog.mozilla.org/feed/",
-    "https://web.dev/feed.xml",
-    "https://v8.dev/blog.atom",
-    "https://alistapart.com/main/feed/",
-    "https://css-tricks.com/feed/",
-    "https://dev.to/feed"
+  "dailies": [
+    "https://hnrss.org/frontpage?points=10&comments=5",
+    "https://retronauts.com/feed/rss",
+    "https://terrysfreegameoftheweek.com/feed/",
+    "https://a327ex.com/posts/index.xml",
+    "https://fasterthanli.me/index.xml",
+    "https://lexi-lambda.github.io/feeds/all.atom.xml",
+    "https://cprss.s3.amazonaws.com/denoweekly.com.xml",
+    "https://increment.com/feed.xml",
+    "https://merelycurious.me/feed.xml",
+    "https://plurrrr.com/feed.rss",
+    "http://journal.stuffwithstuff.com/rss.xml",
+    "https://blog.skialbainn.com/rss"
   ],
-  "Blogs": [
-    "https://george.mand.is/feed.xml",
-    "https://joy.recurse.com/feed.atom"
-  ],
-  "My GitHub Projects": [
-    "https://github.com/georgemandis.atom",
-    "https://github.com/snaptortoise/konami-js/releases.atom",
-    "https://github.com/snaptortoise/konami-js/commits/master.atom",
-    "https://github.com/javascriptforartists/cheer-me-up-and-sing-me-a-song/commits/master.atom",
-    "https://github.com/georgemandis/circuit-playground-midi-multi-tool/commits/master.atom",
-    "https://github.com/georgemandis/remote-working-list/commits/master.atom",
-    "https://github.com/georgemandis/tweeter-totter/commits/master.atom"
+  "videogames": [
+    "https://reddit-top-rss.herokuapp.com/?subreddit=gog&score=30&view=rss",
+    "https://reddit-top-rss.herokuapp.com/?subreddit=games&score=30&view=rss"
   ]
 }

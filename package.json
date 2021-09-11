@@ -2,16 +2,19 @@
   "name": "bubo-reader",
   "version": "1.0.0",
   "description": "A somewhat dumb but effective feed reader (RSS, JSON & Twitter)",
+  "type": "module",
+  "engines": {
+    "node": ">=12.x"
+  },
   "main": "src/index.js",
   "scripts": {
-    "build": "node src/index.js > output/index.html",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "node src/build.js"
   },
-  "author": "",
+  "author": "kevinfiol",
   "license": "ISC",
   "dependencies": {
-    "node-fetch": "^2.6.1",
-    "nunjucks": "^3.2.0",
-    "rss-parser": "^3.6.3"
+    "httpie": "^1.1.2",
+    "rss-parser": "^3.6.3",
+    "yeahjs": "^0.3.0"
   }
 }
