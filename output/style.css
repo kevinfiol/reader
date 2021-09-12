@@ -88,14 +88,11 @@ a:hover {
   opacity: .75;
 }
 
-details[open] summary {
-  margin-bottom: 1rem;
-}
-
 summary {
   position: sticky;
   top: 0;
-  padding: 0.65rem 0;
+  padding-top: 0.65rem;
+  padding-bottom: 0.65rem;
   user-select: none;
   cursor:pointer;
   font-family: monospace;
@@ -172,10 +169,6 @@ article.item {
   margin-top: 0.5rem;
   margin-bottom: 0.5rem;
   background-color: rgba(0, 0, 0, 0.025);
-}
-
-article.item:first-of-type {
-  margin-top: 0;
 }
 
 article.item header.item__header {
