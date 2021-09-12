@@ -14,7 +14,7 @@ import { get } from 'httpie';
 import Parser from 'rss-parser';
 import { compile } from 'yeahjs';
 
-const DEV = true;
+const DEV = false;
 const FEEDS_JSON = './feeds.json';
 const INPUT_TEMPLATE = './template.html';
 const OUTPUT_FILE = '../output/index.html';
