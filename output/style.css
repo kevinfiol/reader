@@ -57,8 +57,9 @@ body {
   }
 }
 
-details[open] > *:not(summary) {
-  animation: details-show 150ms ease-in-out;
+details[open] > *:not(summary),
+section {
+  animation: details-show 100ms ease-in-out;
 }
 
 button {
