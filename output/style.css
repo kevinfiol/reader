@@ -1,35 +1,53 @@
+:root {
+  --font-size: 14px;
+
+  --color: #111;
+  --bg-color: #fffff8;
+
+  --dark-bg-color: #151515;
+  --dark-color: #ddd;
+  --dark-faded: rgba(255, 255, 255, 0.025);
+  --dark-active: rgba(255, 255, 255, 0.075);
+
+  --title-font-size: 16px;
+  --title-font-weight: 600;
+}
+
 body {
+  color: var(--color);
+  background-color: var(--bg-color);
   margin: 0;
   padding: 0;
   font-family: serif;
-  font-size: 16px;
+  font-size: var(--font-size);
   overflow: hidden;
 }
 
 @media (prefers-color-scheme: dark) {
     body {
-        background-color: #151515;
-        color: #ddd;
+        background-color: var(--dark-bg-color) !important;
+        color: var(--dark-color) !important;
     }
 
     article.item {
-      background-color: rgba(255, 255, 255, 0.025) !important;
+      background-color: var(--dark-faded) !important;
     }
 
     button {
-      color: #ddd;
+      color: var(--dark-color) !important;
     }
 
     button:hover {
-      background-color: rgba(255, 255, 255, 0.025);
+      background-color: var(--dark-faded) !important;
     }
 
     button:active {
-      background-color: rgba(255, 255, 255, 0.075);
+      background-color: var(--dark-active) !important;
     }
 }
 
 button {
+  color: var(--color);
   padding: 0.2rem 0.4rem;
   margin: 0;
   background-color: transparent;
@@ -44,7 +62,7 @@ h1, h2, h3 {
 }
 
 a:link {
-    color: inherit;
+  color: inherit;
 }
 
 a:visited {
@@ -81,8 +99,8 @@ summary:hover {
 }
 
 .feed-title {
-  font-weight: 600;
-  font-size: 17px;
+  font-weight: var(--title-font-weight);
+  font-size: var(--title-font-size);
 }
 
 .feed-url, .feed-timestamp {
@@ -131,7 +149,8 @@ main {
 }
 
 article.item {
-  padding: 0.75rem;
+  max-width: 85%;
+  padding: 0.15rem 0.75rem;
   margin-left: 1.5rem;
   margin-right: 1.5rem;
   margin-top: 0.5rem;
@@ -148,7 +167,7 @@ article.item:last-of-type {
 }
 
 article.item header.item__header {
-  font-size: 17px;
+  font-size: var(--title-font-size);
 }
 
 ul.article-links {
@@ -178,7 +197,7 @@ section {
 }
 
 main section {
-  padding-bottom: 10rem; /* adds scroll space */
+  padding-bottom: 16rem; /* adds scroll space */
 }
 
 section > h2 {
