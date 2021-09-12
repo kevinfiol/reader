@@ -15,6 +15,28 @@ body {
     article.item {
       background-color: rgba(255, 255, 255, 0.025) !important;
     }
+
+    button {
+      color: #ddd;
+    }
+
+    button:hover {
+      background-color: rgba(255, 255, 255, 0.025);
+    }
+
+    button:active {
+      background-color: rgba(255, 255, 255, 0.075);
+    }
+}
+
+button {
+  padding: 0.2rem 0.4rem;
+  margin: 0;
+  background-color: transparent;
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 3px;
+  font-family: monospace;
 }
 
 h1, h2, h3 {
@@ -54,6 +76,8 @@ summary:hover {
 .group-selector a,
 .group-selector a:visited {
   color: inherit;
+  font-family: monospace;
+  line-height: 1.5em;
 }
 
 .feed-title {
@@ -77,6 +101,10 @@ summary:hover {
   font-family: monospace;
 }
 
+.inline {
+  display: inline;
+}
+
 .app {
   display: flex;
   gap: 2rem;
@@ -89,6 +117,10 @@ summary:hover {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+}
+
+header {
+  padding-top: 1rem;
 }
 
 main {
@@ -143,6 +175,10 @@ section {
   display: none;
   height: 100%;
   width: 100%;
+}
+
+main section {
+  padding-bottom: 10rem; /* adds scroll space */
 }
 
 section > h2 {
