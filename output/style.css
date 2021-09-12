@@ -44,6 +44,21 @@ body {
     button:active {
       background-color: var(--dark-active) !important;
     }
+
+    summary {
+      background-color: var(--dark-bg-color) !important;
+    }
+}
+
+@keyframes details-show {
+  from {
+    opacity:0;
+    transform: var(--details-translate, translateY(-0.5em));
+  }
+}
+
+details[open] > *:not(summary) {
+  animation: details-show 150ms ease-in-out;
 }
 
 button {
@@ -73,21 +88,22 @@ a:hover {
   opacity: .75;
 }
 
-details {
-  padding: 0.65rem 0;
-}
-
 details[open] summary {
   margin-bottom: 1rem;
 }
 
 summary {
+  position: sticky;
+  top: 0;
+  padding: 0.65rem 0;
   user-select: none;
   cursor:pointer;
   font-family: monospace;
+  background-color: var(--bg-color);
 }
 
-summary:hover {
+summary:hover span,
+summary:hover div {
   opacity:.75;
 }
 
@@ -162,10 +178,6 @@ article.item:first-of-type {
   margin-top: 0;
 }
 
-article.item:last-of-type {
-  margin-bottom: 0;
-}
-
 article.item header.item__header {
   font-size: var(--title-font-size);
 }
@@ -194,10 +206,6 @@ section {
   display: none;
   height: 100%;
   width: 100%;
-}
-
-main section {
-  padding-bottom: 16rem; /* adds scroll space */
 }
 
 section > h2 {
