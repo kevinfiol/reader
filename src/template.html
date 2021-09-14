@@ -69,10 +69,11 @@
                     <ul class="article-links">
                       <li class="monospace"><%= item.timestamp %></li>
                       <% if (item.comments) { %>
-                        <li><a href="<%= item.comments %>">comments</a></li>
+                        <li><a href="<%= item.comments %>" target='_blank' rel='noopener norefferer nofollow'>comments</a></li>
                       <% } %>
-                      <li><a href="https://outline.com/<%= item.link %>">outline</a></li>
-                      <li><a href="https://text.fish/<%= item.link %>">text.fish</a></li>
+                      <li><a href="https://outline.com/<%= item.link %>" target='_blank' rel='noopener norefferer nofollow'>outline</a></li>
+                      <li><a href="https://text.fish/<%= item.link %>" target='_blank' rel='noopener norefferer nofollow'>text.fish</a></li>
+                      <li><a href="https://archive.md/<%= item.link %>" target='_blank' rel='noopener norefferer nofollow'>archive.md</a></li>
                     </ul>
                   </small>
                 </article>
