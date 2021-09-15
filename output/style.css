@@ -48,6 +48,10 @@ body {
     summary {
       background-color: var(--dark-bg-color) !important;
     }
+
+    section {
+      background-color: var(--dark-bg-color) !important;
+    }
 }
 
 @keyframes details-show {
@@ -196,10 +200,12 @@ footer:hover {
 }
 
 section {
+  z-index: 1;
   /* ! Everything below is needed ! */
   display: none;
   height: 100%;
   width: 100%;
+  background-color: var(--bg-color);
 }
 
 section > h2 {
@@ -211,6 +217,15 @@ section:target { /* Show section */
   display: block;
 }
 
-section#none { /* Show #home by default */
-  display: block;
+section:target ~ .default-text {
+  display: none;
+}
+
+
+.default-text {
+  text-align: center;
+  position: relative;
+  top: 5%;
+  font-family: monospace;
+  font-size: 2em;
 }
