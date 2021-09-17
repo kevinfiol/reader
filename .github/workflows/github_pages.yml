@@ -6,6 +6,10 @@ on:
   schedule:
     # Run this script every 30 minutes
     - cron:  '*/30 * * * *'
+  workflow_dispatch:
+    inputs:
+      tags:
+        description: 'Description Tag'  
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
