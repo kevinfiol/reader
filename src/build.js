@@ -126,7 +126,7 @@ function parseFeed(response) {
         });
     }
 
-    const now = (new Date()).toUTCString();
+    const now = (new Date()).toString();
     const html = render({ groups, now, errors });
     writeFileSync(join(__dirname, OUTPUT_FILE), html, { encoding: 'utf8' });
 })();
