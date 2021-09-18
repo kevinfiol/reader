@@ -142,9 +142,9 @@ function parseDate(item) {
 
 function getNowDate(){
     //EST
-    const offset = -5.0
+    const offset = -4.0
     
-    const d = new Date();
+    let d = new Date();
     const utc = d.getTime() + (d.getTimezoneOffset() * 60000);
     d = new Date(utc + (3600000 * offset));
     return d;
