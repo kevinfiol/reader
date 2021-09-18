@@ -126,7 +126,7 @@ function parseFeed(response) {
         });
     }
 
-    const now = (new Date()).toString();
+    const now = getNowDate().toString();
     const html = render({ groups, now, errors });
     writeFileSync(join(__dirname, OUTPUT_FILE), html, { encoding: 'utf8' });
 })();
@@ -138,4 +138,14 @@ function parseDate(item) {
     }
 
     return null;
+}
+
+function getNowDate(){
+    //EST
+    const offset = -5.0
+    
+    const d = new Date();
+    const utc = d.getTime() + (d.getTimezoneOffset() * 60000);
+    d = new Date(utc + (3600000 * offset));
+    return d;
 }
