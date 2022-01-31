@@ -89,6 +89,11 @@ function parseFeed(response) {
 
                             item.link = newLink;
                         }
+                        
+                        // replace twitter links with nitter
+                        if (item.link.indexOf('https://twitter.com') == 0) {
+                            item.link = item.link.replace('https://twitter.com', 'https://nitter.net');
+                        }
                     });
 
                     // sort items
