@@ -94,6 +94,11 @@ function parseFeed(response) {
                         if (item.link.indexOf('https://twitter.com') == 0) {
                             item.link = item.link.replace('https://twitter.com', 'https://nitter.net');
                         }
+                        
+                        // replace medium links with scribe.rip
+                        if (item.link.indexOf('https://medium.com') == 0) {
+                            item.link = item.link.replace('https://medium.com', 'https://scribe.rip');
+                        }
                     });
 
                     // sort items
