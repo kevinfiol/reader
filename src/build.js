@@ -96,8 +96,8 @@ function parseFeed(response) {
                         }
                         
                         // replace medium links with scribe.rip
-                        if (item.link.indexOf('https://medium.com') == 0) {
-                            item.link = item.link.replace('https://medium.com', 'https://scribe.rip');
+                        if (item.link.indexOf('medium.com/') !== -1 ) {
+                            item.link = 'https://scribe.rip/' + item.link
                         }
                     });
 
