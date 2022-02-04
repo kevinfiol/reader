@@ -91,13 +91,14 @@ function parseFeed(response) {
                         }
                         
                         // replace twitter links with nitter
-                        if (item.link.indexOf('https://twitter.com') == 0) {
-                            item.link = item.link.replace('https://twitter.com', 'https://nitter.net');
+                        let twitterMatch = matchTwitter(item.link);
+                        if (twitterMatch) {
+                            item.link = item.link.replace(twitterMatch, '://nitter.net/');
                         }
                         
                         // replace medium links with scribe.rip
                         if (item.link.indexOf('medium.com/') !== -1 ) {
-                            item.link = 'https://scribe.rip/' + item.link
+                            item.link = 'https://scribe.rip/' + item.link;
                         }
                     });
 
@@ -158,4 +159,20 @@ function getNowDate(){
     const utc = d.getTime() + (d.getTimezoneOffset() * 60000);
     d = new Date(utc + (3600000 * offset));
     return d;
+}
+
+function matchTwitter(str) {
+    const urls = [
+        "://twitter.com/",
+        "://www.twitter.com/",
+        "://mobile.twitter.com/"
+    ];
+
+    for (let i = 0, len = urls.length; i < len; i++) {
+        if (str.includes(urls[i])) {
+            return urls[i];
+        }
+    }
+
+    return '';
 }
