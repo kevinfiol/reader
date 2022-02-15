@@ -127,7 +127,7 @@ function parseFeed(response) {
     }
 
     // sort feeds
-    for (let i = 0, len = groups[0].length; i < len; i++) {
+    for (let i = 0, len = groups.length; i < len; i++) {
         // for each group, sort the feeds
         // sort the feeds by comparing the isoDate of the first items of each feed
         groups[i][1].sort((a, b) => {
