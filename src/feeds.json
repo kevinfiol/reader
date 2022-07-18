@@ -11,7 +11,10 @@
     "https://plurrrr.com/feed.rss",
     "http://journal.stuffwithstuff.com/rss.xml",
     "https://blog.skialbainn.com/rss",
-    "https://handmade.network/podcast/podcast.xml"
+    "https://handmade.network/podcast/podcast.xml",
+    "https://nickjanetakis.com/atom.xml",
+    "https://danluu.com/atom.xml",
+    "https://egonelbre.com/index.xml"
   ],
   "videogames": [
     "https://reddit-top-rss.herokuapp.com/?subreddit=gog&score=5&view=rss",
@@ -20,9 +23,7 @@
   "devlogs": [
     "https://solarlune.itch.io/masterplan/devlog.rss"
   ],
-  "blogs": [
-    "https://danluu.com/atom.xml",
-    "https://egonelbre.com/index.xml",
+  "misc": [
     "https://kevinfiol.com/atom.xml"
   ]
 }
