@@ -19,6 +19,9 @@ const FEEDS_JSON = './feeds.json';
 const INPUT_TEMPLATE = './template.html';
 const OUTPUT_FILE = '../output/index.html';
 
+const NITTER_URL = 'notabird.site';
+const MEDIUM_URL = 'scribe.rip';
+
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const feeds = JSON.parse(readFileSync(join(__dirname, FEEDS_JSON), { encoding: 'utf8' }));
 
@@ -93,12 +96,12 @@ function parseFeed(response) {
                         // replace twitter links with nitter
                         let twitterMatch = matchTwitter(item.link);
                         if (twitterMatch) {
-                            item.link = item.link.replace(twitterMatch, '://nitter.net/');
+                            item.link = item.link.replace(twitterMatch, `://${NITTER_URL}/`);
                         }
                         
                         // replace medium links with scribe.rip
                         if (item.link.indexOf('medium.com/') !== -1 ) {
-                            item.link = 'https://scribe.rip/' + item.link;
+                            item.link = `https://${MEDIUM_URL}/` + item.link;
                         }
                     });
 
