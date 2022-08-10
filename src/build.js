@@ -21,6 +21,7 @@ const OUTPUT_FILE = '../output/index.html';
 
 const NITTER_URL = 'notabird.site';
 const MEDIUM_URL = 'scribe.rip';
+const YOUTUBE_URL = 'piped.kavin.rocks';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const feeds = JSON.parse(readFileSync(join(__dirname, FEEDS_JSON), { encoding: 'utf8' }));
@@ -100,8 +101,13 @@ function parseFeed(response) {
                         }
                         
                         // replace medium links with scribe.rip
-                        if (item.link.indexOf('medium.com/') !== -1 ) {
+                        if (item.link.indexOf('medium.com/') !== -1) {
                             item.link = `https://${MEDIUM_URL}/` + item.link;
+                        }
+
+                        // redirect youtube links to piped
+                        if (item.link.indexOf('youtube.com/') !== -1) {
+                            item.link = `https://${YOUTUBE_URL}` + item.link.split('youtube.com')[1];
                         }
                     });
 
