@@ -21,7 +21,7 @@ const OUTPUT_FILE = '../output/index.html';
 
 const NITTER_URL = 'notabird.site';
 const MEDIUM_URL = 'scribe.rip';
-const YOUTUBE_URL = 'piped.kavin.rocks';
+const YOUTUBE_URL = 'yewtu.be';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const feeds = JSON.parse(readFileSync(join(__dirname, FEEDS_JSON), { encoding: 'utf8' }));
