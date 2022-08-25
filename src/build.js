@@ -19,9 +19,12 @@ const FEEDS_JSON = './feeds.json';
 const INPUT_TEMPLATE = './template.html';
 const OUTPUT_FILE = '../output/index.html';
 
-const NITTER_URL = 'notabird.site';
-const MEDIUM_URL = 'scribe.rip';
-const YOUTUBE_URL = 'yewtu.be';
+const REDIRECTS = {
+    'twitter': 'notabird.site',
+    'medium': 'scribe.rip',
+    'youtube': 'yewtu.be',
+    'youtu': 'yewtu.be'
+};
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const feeds = JSON.parse(readFileSync(join(__dirname, FEEDS_JSON), { encoding: 'utf8' }));
@@ -93,21 +96,15 @@ function parseFeed(response) {
 
                             item.link = newLink;
                         }
-                        
-                        // replace twitter links with nitter
-                        let twitterMatch = matchTwitter(item.link);
-                        if (twitterMatch) {
-                            item.link = item.link.replace(twitterMatch, `://${NITTER_URL}/`);
-                        }
-                        
-                        // replace medium links with scribe.rip
-                        if (item.link.indexOf('medium.com/') !== -1) {
-                            item.link = `https://${MEDIUM_URL}/` + item.link;
-                        }
 
-                        // redirect youtube links to piped
-                        if (item.link.indexOf('youtube.com/') !== -1) {
-                            item.link = `https://${YOUTUBE_URL}` + item.link.split('youtube.com')[1];
+                        // privacy redirects
+                        const url = new URL(item.link);
+                        const tokens = url.hostname.split('.');
+                        const host = tokens[tokens.length - 2];
+                        const redirect = REDIRECTS[host];
+
+                        if (redirect) {
+                            item.link = `https://${redirect}${url.pathname}${url.search}`;
                         }
                     });
 
@@ -160,28 +157,12 @@ function parseDate(item) {
     return null;
 }
 
-function getNowDate(){
+function getNowDate() {
     //EST
     const offset = -4.0
-    
+
     let d = new Date();
     const utc = d.getTime() + (d.getTimezoneOffset() * 60000);
     d = new Date(utc + (3600000 * offset));
     return d;
-}
-
-function matchTwitter(str) {
-    const urls = [
-        "://twitter.com/",
-        "://www.twitter.com/",
-        "://mobile.twitter.com/"
-    ];
-
-    for (let i = 0, len = urls.length; i < len; i++) {
-        if (str.includes(urls[i])) {
-            return urls[i];
-        }
-    }
-
-    return '';
 }
