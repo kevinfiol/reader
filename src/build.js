@@ -22,8 +22,8 @@ const OUTPUT_FILE = '../output/index.html';
 const REDIRECTS = {
     'twitter': 'notabird.site',
     'medium': 'scribe.rip',
-    'youtube': 'yewtu.be',
-    'youtu': 'yewtu.be'
+    'youtube': 'puffyan.us',
+    'youtu': 'puffyan.us'
 };
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
