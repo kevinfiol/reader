@@ -18,12 +18,13 @@ const DEV = false;
 const FEEDS_JSON = './feeds.json';
 const INPUT_TEMPLATE = './template.html';
 const OUTPUT_FILE = '../output/index.html';
+const YOUTUBE_REDIRECT = 'invidious.snopyta.org';
 
 const REDIRECTS = {
     'twitter': 'notabird.site',
     'medium': 'scribe.rip',
-    'youtube': 'yewtu.be',
-    'youtu': 'yewtu.be'
+    'youtube': YOUTUBE_REDIRECT,
+    'youtu': YOUTUBE_REDIRECT
 };
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
