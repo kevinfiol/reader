@@ -17,8 +17,8 @@
     "https://marvinh.dev/feed.xml"
   ],
   "videogames": [
-    "https://reddit-top-rss.herokuapp.com/?subreddit=gog&score=5&view=rss",
-    "https://reddit-top-rss.herokuapp.com/?subreddit=games&score=30&view=rss"
+    "https://www.reddit.com/r/gog.rss",
+    "https://www.reddit.com/r/Games.rss"
   ],
   "devlogs": [
     "https://solarlune.itch.io/masterplan/devlog.rss"
