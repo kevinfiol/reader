@@ -18,7 +18,7 @@ const DEV = false;
 const FEEDS_JSON = './feeds.json';
 const INPUT_TEMPLATE = './template.html';
 const OUTPUT_FILE = '../output/index.html';
-const YOUTUBE_REDIRECT = 'inv.vern.cc';
+const YOUTUBE_REDIRECT = 'yt.artemislena.eu';
 
 const REDIRECTS = {
     'twitter': 'notabird.site',
