@@ -53,7 +53,7 @@
                   </small>
                 </span>
                 <div class="feed-timestamp">
-                  <small>Latest: <%= feed.items[0].timestamp || 'N/A' %></small>
+                  <small>Latest: <%= feed.items[0] && feed.items[0].timestamp || '' %></small>
                 </div>
               </summary>
               <% for (let item of feed.items) { %>
@@ -66,7 +66,7 @@
 
                   <small>
                     <ul class="article-links">
-                      <li class="monospace"><%= item.timestamp || 'N/A' %></li>
+                      <li class="monospace"><%= item.timestamp || '' %></li>
                       <% if (item.comments) { %>
                         <li><a href="<%= item.comments %>" target='_blank' rel='noopener norefferer nofollow'>comments</a></li>
                       <% } %>
