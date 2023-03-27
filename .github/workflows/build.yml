@@ -16,6 +16,9 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18.15.0
       - name: Install and Run Node Script
         run: |
           npm install --omit=dev

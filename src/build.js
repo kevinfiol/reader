@@ -6,164 +6,139 @@
  *
  */
 
-import { readFileSync, writeFileSync } from 'fs';
-import { join, dirname } from 'path';
-import { fileURLToPath } from 'url';
-
-import { get } from 'httpie';
+import { resolve } from 'node:path';
+import { readFileSync, writeFileSync } from 'node:fs';
 import Parser from 'rss-parser';
 import { compile } from 'yeahjs';
+import feeds from './feeds.json' assert { type: 'json' };
 
-const DEV = false;
-const FEEDS_JSON = './feeds.json';
-const INPUT_TEMPLATE = './template.html';
-const OUTPUT_FILE = '../output/index.html';
-const YOUTUBE_REDIRECT = 'youtube.com';
+const DEV = process.argv.includes('-d');
+const TIMEZONE_OFFSET = -4.0; // Default to EST
 
 const REDIRECTS = {
-    'twitter': 'notabird.site',
-    'medium': 'scribe.rip',
-    'youtube': YOUTUBE_REDIRECT,
-    'youtu': YOUTUBE_REDIRECT
+  'twitter': 'notabird.site',
+  'medium': 'scribe.rip',
+  'youtube': 'youtube.com',
+  'youtu': 'youtube.com'
 };
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
-const feeds = JSON.parse(readFileSync(join(__dirname, FEEDS_JSON), { encoding: 'utf8' }));
+const FEED_CONTENT_TYPES = [
+    'application/json',
+    'application/atom+xml',
+    'application/rss+xml',
+    'application/xml',
+    'text/xml'
+];
 
 const parser = new Parser();
-const template = readFileSync(join(__dirname, INPUT_TEMPLATE), { encoding: 'utf8' });
-const render = compile(template, { localsName: 'it' });
+const template = readFileSync(resolve('./src/template.html'), { encoding: 'utf8' });
+const renderHtml = compile(template, { localsName: 'it' });
 
-// parse XML or JSON feeds
-function parseFeed(response) {
-    const contentType = response.headers['content-type']
-        ? response.headers['content-type'].split(";")[0]
-        : false;
+const contentFromAllFeeds = {};
+const errors = [];
 
-    if (!contentType) return false;
+if (!DEV) {
+  for (const group in feeds) {
+    contentFromAllFeeds[group] = [];
 
-    const contentTypes = [
-        'application/json',
-        'application/atom+xml',
-        'application/rss+xml',
-        'application/xml',
-        'text/xml',
-        'text/html' // this is kind of a gamble
-    ];
+    for (let index = 0; index < feeds[group].length; index++) {
+      try {
+        const url = feeds[group][index];
+        const response = await fetch(url, { method: 'GET' });
+        const contentType = response.headers.get('content-type').split(';')[0]; // e.g., `application/xml; charset=utf-8` -> `application/xml`
 
-    if (contentTypes.includes(contentType)) {
-        return response.data;
+        if (!FEED_CONTENT_TYPES.includes(contentType)) {
+          // invalid content type
+          continue;
+        }
+
+        const body = await response.text();
+        const contents = typeof body === "string" ? await parser.parseString(body) : body;
+
+        contents.feed = feeds[group][index];
+        contents.title = contents.title ? contents.title : contents.link;
+        contentFromAllFeeds[group].push(contents);
+
+        // try to normalize date attribute naming
+        contents.items.forEach(item => {
+          const timestamp = new Date(item.pubDate || item.isoDate || item.date).getTime();
+          item.timestamp = isNaN(timestamp) ? (item.pubDate || item.isoDate || item.date) : timestamp;
+
+          const formattedDate = new Date(item.timestamp).toLocaleDateString()
+          item.timestamp = formattedDate !== 'Invalid Date' ? formattedDate : dateString;
+
+          // correct link url if lacks hostname
+          if (item.link && item.link.split('http').length == 1) {
+            let newLink;
+
+            if (contents.link.slice(-1) == '/' && item.link.slice(0, 1) == '/') {
+              newLink = contents.link + item.link.slice(1);
+            } else {
+              newLink = contents.link + item.link;
+            }
+
+            item.link = newLink;
+          }
+
+          // privacy redirects
+          const url = new URL(item.link);
+          const tokens = url.hostname.split('.');
+          const host = tokens[tokens.length - 2];
+          const redirect = REDIRECTS[host];
+
+          if (redirect) {
+            item.link = `https://${redirect}${url.pathname}${url.search}`;
+          }
+        });
+
+        // sort items by date
+        contents.items.sort(byDateSort);
+      } catch (error) {
+        console.error(error);
+        errors.push(feeds[group][index]);
+      }
     }
-
-    return false;
+  }
 }
 
-(async () => {
-    const contentFromAllFeeds = {};
-    const errors = [];
+let groups;
 
-    if (!DEV) {
-        for (const group in feeds) {
-            contentFromAllFeeds[group] = [];
+if (DEV) {
+  const testJson = JSON.parse(readFileSync(resolve('./src/data.json'), { encoding: 'utf8' }));
+  groups = Object.entries(testJson);
+} else {
+  groups = Object.entries(contentFromAllFeeds);
+  writeFileSync(resolve('./src/data.json'), JSON.stringify(contentFromAllFeeds), 'utf8');
+}
 
-            for (let index = 0; index < feeds[group].length; index++) {
-                try {
-                    const response = await get(feeds[group][index]);
-                    const body = parseFeed(response);
-                    const contents =
-                    typeof body === "string" ? await parser.parseString(body) : body;
+// for each group, sort the feeds
+// sort the feeds by comparing the isoDate of the first items of each feed
+for (let i = 0, len = groups.length; i < len; i++) {
+  groups[i][1].sort((a, b) => byDateSort(a.items[0], b.items[0]));
+}
 
-                    contents.feed = feeds[group][index];
-                    contents.title = contents.title ? contents.title : contents.link;
-                    contentFromAllFeeds[group].push(contents);
+const now = getNowDate().toString();
+const html = renderHtml({ groups, now, errors });
+writeFileSync(resolve('./output/index.html'), html, { encoding: 'utf8' });
 
-                    // try to normalize date attribute naming
-                    contents.items.forEach(item => {
-                        const timestamp = new Date(item.pubDate || item.isoDate || item.date).getTime();
-                        item.timestamp = isNaN(timestamp) ? (item.pubDate || item.isoDate || item.date) : timestamp;
-
-                        const formattedDate = new Date(item.timestamp).toLocaleDateString()
-                        item.timestamp = formattedDate !== 'Invalid Date' ? formattedDate : dateString;
-
-                        // correct link url if lacks hostname
-                        if (item.link && item.link.split('http').length == 1) {
-                            let newLink;
-
-                            if (contents.link.slice(-1) == '/' && item.link.slice(0, 1) == '/') {
-                                newLink = contents.link + item.link.slice(1);
-                            } else {
-                                newLink = contents.link + item.link;
-                            }
-
-                            item.link = newLink;
-                        }
-
-                        // privacy redirects
-                        const url = new URL(item.link);
-                        const tokens = url.hostname.split('.');
-                        const host = tokens[tokens.length - 2];
-                        const redirect = REDIRECTS[host];
-
-                        if (redirect) {
-                            item.link = `https://${redirect}${url.pathname}${url.search}`;
-                        }
-                    });
-
-                    // sort items
-                    contents.items.sort((a, b) => {
-                        const [aDate, bDate] = [parseDate(a), parseDate(b)];
-                        if (!aDate || !bDate) return 0; 
-                        return bDate - aDate;
-                    });
-                } catch (error) {
-                  console.error(error);
-                  errors.push(feeds[group][index]);
-                }
-          }
-        }
-    }
-
-    let groups;
-
-    if (DEV) {
-        const testJson = JSON.parse(readFileSync(join(__dirname, './data.json'), { encoding: 'utf8' }));
-        groups = Object.entries(testJson);
-    } else {
-        groups = Object.entries(contentFromAllFeeds);
-        writeFileSync(join(__dirname, './data.json'), JSON.stringify(contentFromAllFeeds), 'utf8');
-    }
-
-    // sort feeds
-    for (let i = 0, len = groups.length; i < len; i++) {
-        // for each group, sort the feeds
-        // sort the feeds by comparing the isoDate of the first items of each feed
-        groups[i][1].sort((a, b) => {
-            const [aDate, bDate] = [parseDate(a.items[0]), parseDate(b.items[0])];
-            if (!aDate || !bDate) return 0; 
-            return bDate - aDate;
-        });
-    }
-
-    const now = getNowDate().toString();
-    const html = render({ groups, now, errors });
-    writeFileSync(join(__dirname, OUTPUT_FILE), html, { encoding: 'utf8' });
-})();
+function byDateSort(dateStrA, dateStrB) {
+  const [aDate, bDate] = [parseDate(dateStrA), parseDate(dateStrB)];
+  if (!aDate || !bDate) return 0;
+  return bDate - aDate;
+}
 
 function parseDate(item) {
-    if (item) {
-        if (item.isoDate) return new Date(item.isoDate);
-        else if (item.pubDate) return new Date(item.pubDate);
-    }
+  if (item) {
+    if (item.isoDate) return new Date(item.isoDate);
+    else if (item.pubDate) return new Date(item.pubDate);
+  }
 
-    return null;
+  return null;
 }
 
 function getNowDate() {
-    //EST
-    const offset = -4.0
-
-    let d = new Date();
-    const utc = d.getTime() + (d.getTimezoneOffset() * 60000);
-    d = new Date(utc + (3600000 * offset));
-    return d;
+  let d = new Date();
+  const utc = d.getTime() + (d.getTimezoneOffset() * 60000);
+  d = new Date(utc + (3600000 * TIMEZONE_OFFSET));
+  return d;
 }

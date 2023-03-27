@@ -4,16 +4,15 @@
   "description": "A somewhat dumb but effective feed reader (RSS, JSON & Twitter)",
   "type": "module",
   "engines": {
-    "node": ">=12.x"
+    "node": ">=18.x"
   },
-  "main": "src/index.js",
   "scripts": {
-    "build": "node src/build.js"
+    "build": "node src/build.js",
+    "dev": "node src/build.js -d"
   },
   "author": "kevinfiol",
   "license": "ISC",
   "dependencies": {
-    "httpie": "^1.1.2",
     "rss-parser": "^3.6.3",
     "yeahjs": "^0.3.0"
   }
