@@ -13,7 +13,6 @@
   "author": "kevinfiol",
   "license": "ISC",
   "dependencies": {
-    "rss-parser": "^3.6.3",
-    "yeahjs": "^0.3.0"
+    "rss-parser": "^3.6.3"
   }
 }

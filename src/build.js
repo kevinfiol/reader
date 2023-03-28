@@ -9,7 +9,7 @@
 import { resolve } from 'node:path';
 import { readFileSync, writeFileSync } from 'node:fs';
 import Parser from 'rss-parser';
-import { compile } from 'yeahjs';
+import { template } from './template.js';
 import feeds from './feeds.json' assert { type: 'json' };
 
 const DEV = process.argv.includes('-d');
@@ -31,9 +31,6 @@ const FEED_CONTENT_TYPES = [
 ];
 
 const parser = new Parser();
-const template = readFileSync(resolve('./src/template.html'), { encoding: 'utf8' });
-const renderHtml = compile(template, { localsName: 'it' });
-
 const contentFromAllFeeds = {};
 const errors = [];
 
@@ -117,8 +114,8 @@ for (let i = 0, len = groups.length; i < len; i++) {
   groups[i][1].sort((a, b) => byDateSort(a.items[0], b.items[0]));
 }
 
-const now = getNowDate().toString();
-const html = renderHtml({ groups, now, errors });
+const now = getNowDate(TIMEZONE_OFFSET).toString();
+const html = template({ groups, now, errors });
 writeFileSync(resolve('./output/index.html'), html, { encoding: 'utf8' });
 
 function byDateSort(dateStrA, dateStrB) {
@@ -136,9 +133,9 @@ function parseDate(item) {
   return null;
 }
 
-function getNowDate() {
+function getNowDate(offset) {
   let d = new Date();
   const utc = d.getTime() + (d.getTimezoneOffset() * 60000);
-  d = new Date(utc + (3600000 * TIMEZONE_OFFSET));
+  d = new Date(utc + (3600000 * offset));
   return d;
 }
