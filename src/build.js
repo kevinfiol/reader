@@ -51,7 +51,7 @@ if (!DEV) {
 
         const body = await response.text();
         const contents = typeof body === "string" ? await parser.parseString(body) : body;
-        const isRedditRSS = contents.feedUrl.startsWith("https://www.reddit.com/r/");
+        const isRedditRSS = contents.feedUrl && contents.feedUrl.startsWith("https://www.reddit.com/r/");
 
         contents.feed = feeds[group][index];
         contents.title = contents.title ? contents.title : contents.link;
