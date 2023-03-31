@@ -51,6 +51,7 @@ if (!DEV) {
 
         const body = await response.text();
         const contents = typeof body === "string" ? await parser.parseString(body) : body;
+        const isRedditRSS = contents.feedUrl.startsWith("https://www.reddit.com/r/");
 
         contents.feed = feeds[group][index];
         contents.title = contents.title ? contents.title : contents.link;
@@ -75,6 +76,16 @@ if (!DEV) {
             }
 
             item.link = newLink;
+          }
+
+          // if it's a link submission, let's parse the link to the content and rewrite item.link with it
+          // I can tell its a link submission by the beginning of the contentSnippet
+          if (isRedditRSS && item.contentSnippet && item.contentSnippet.startsWith('submitted by    ')) {
+            // matches anything between double quotes, like `<a href="matches this">foo</a>`
+            const quotesContentMatch = /(?<=")(?:\\.|[^"\\])*(?=")/g;
+            let [_submittedBy, _userLink, contentLink, commentsLink] = item.content.split('<a href=');
+            item.link = contentLink.match(quotesContentMatch)[0];
+            item.comments = commentsLink.match(quotesContentMatch)[0];
           }
 
           // privacy redirects
