@@ -1,5 +1,5 @@
 {
-  "name": "bubo-reader",
+  "name": "reader",
   "version": "1.0.0",
   "description": "A somewhat dumb but effective feed reader (RSS, JSON & Twitter)",
   "type": "module",

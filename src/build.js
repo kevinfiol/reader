@@ -23,11 +23,11 @@ const REDIRECTS = {
 };
 
 const FEED_CONTENT_TYPES = [
-    'application/json',
-    'application/atom+xml',
-    'application/rss+xml',
-    'application/xml',
-    'text/xml'
+  'application/json',
+  'application/atom+xml',
+  'application/rss+xml',
+  'application/xml',
+  'text/xml'
 ];
 
 const parser = new Parser();
@@ -52,6 +52,11 @@ if (!DEV) {
         const body = await response.text();
         const contents = typeof body === "string" ? await parser.parseString(body) : body;
         const isRedditRSS = contents.feedUrl && contents.feedUrl.startsWith("https://www.reddit.com/r/");
+
+        if (!contents.items.length) {
+          errors.push(url);
+          continue; // don't add feeds without items
+        }
 
         contents.feed = feeds[group][index];
         contents.title = contents.title ? contents.title : contents.link;
