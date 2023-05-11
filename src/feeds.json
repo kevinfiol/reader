@@ -1,32 +1,31 @@
 {
-  "dailies": [
-    "https://www.reddit.com/r/AskHistorians.rss",
-    "https://hnrss.org/frontpage?points=10&comments=5&count=35",
-    "https://hnrss.org/best?count=35",
-    "https://retronauts.com/feed/rss",
-    "https://terrysfreegameoftheweek.com/feed/",
-    "https://fasterthanli.me/index.xml",
-    "https://lexi-lambda.github.io/feeds/all.rss.xml",
-    "https://increment.com/feed.xml",
-    "https://merelycurious.me/feed.xml",
-    "http://journal.stuffwithstuff.com/rss.xml",
-    "https://blog.skialbainn.com/rss",
-    "https://handmade.network/podcast/podcast.xml",
+  "blogs": [
+    "https://log.schemescape.com/feed.xml",
+    "https://marvinh.dev/feed.xml",
+    "https://zserge.com/rss.xml",
+    "https://blog.edwardloveall.com/rss",
     "https://nickjanetakis.com/atom.xml",
     "https://danluu.com/atom.xml",
     "https://egonelbre.com/index.xml",
-    "https://marvinh.dev/feed.xml",
-    "https://zserge.com/rss.xml",
-    "https://blog.edwardloveall.com/rss"
-  ],
-  "videogames": [
-    "https://www.reddit.com/r/gog.rss",
-    "https://www.reddit.com/r/Games.rss"
-  ],
-  "devlogs": [
+    "https://kevinfiol.com/atom.xml",
+    "https://merelycurious.me/feed.xml",
+    "http://journal.stuffwithstuff.com/rss.xml",
+    "https://blog.skialbainn.com/rss",
+    "https://terrysfreegameoftheweek.com/feed/",
+    "https://fasterthanli.me/index.xml",
+    "https://lexi-lambda.github.io/feeds/all.rss.xml",
     "https://solarlune.itch.io/masterplan/devlog.rss"
   ],
-  "misc": [
-    "https://kevinfiol.com/atom.xml"
+  "feeds": [
+    "https://hnrss.org/frontpage?points=10&comments=5&count=35",
+    "https://hnrss.org/best?count=35",
+    "https://retronauts.com/feed/rss",
+    "https://increment.com/feed.xml",
+    "https://handmade.network/podcast/podcast.xml"
+  ],
+  "reddit": [
+    "https://www.reddit.com/r/gog.rss",
+    "https://www.reddit.com/r/Games.rss",
+    "https://www.reddit.com/r/AskHistorians.rss"
   ]
 }
