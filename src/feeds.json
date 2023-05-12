@@ -1,4 +1,11 @@
 {
+  "feeds": [
+    "https://hnrss.org/frontpage?points=10&comments=5&count=35",
+    "https://hnrss.org/best?count=35",
+    "https://retronauts.com/feed/rss",
+    "https://increment.com/feed.xml",
+    "https://handmade.network/podcast/podcast.xml"
+  ],
   "blogs": [
     "https://log.schemescape.com/feed.xml",
     "https://marvinh.dev/feed.xml",
@@ -14,14 +21,8 @@
     "https://terrysfreegameoftheweek.com/feed/",
     "https://fasterthanli.me/index.xml",
     "https://lexi-lambda.github.io/feeds/all.rss.xml",
-    "https://solarlune.itch.io/masterplan/devlog.rss"
-  ],
-  "feeds": [
-    "https://hnrss.org/frontpage?points=10&comments=5&count=35",
-    "https://hnrss.org/best?count=35",
-    "https://retronauts.com/feed/rss",
-    "https://increment.com/feed.xml",
-    "https://handmade.network/podcast/podcast.xml"
+    "https://solarlune.itch.io/masterplan/devlog.rss",
+    "https://blog.axlight.com/index.xml"
   ],
   "reddit": [
     "https://www.reddit.com/r/gog.rss",
