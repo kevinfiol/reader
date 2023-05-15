@@ -135,7 +135,10 @@ const allItems = [];
 for (let [_groupName, feeds] of groups) {
   for (let feed of feeds) {
     for (let i = 0, len = feed.items.length; i < len; i++) {
-      allItems.push({ ...feed.items[i], feedUrl: new URL(feed.feedUrl).hostname });
+      allItems.push({
+        ...feed.items[i],
+        feedUrl: feed.feedUrl ? new URL(feed.feedUrl).hostname : ''
+      });
     }
   }
 }
