@@ -213,8 +213,16 @@ article.item {
   background-color: var(--faded-bg);
 }
 
+#all-articles > article.item {
+  margin-left: 0;
+}
+
 article.item header.item__header {
   font-size: var(--title-font-size);
+}
+
+.item__feed-url {
+  opacity: 0.25;
 }
 
 ul.article-links {

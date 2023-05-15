@@ -130,8 +130,20 @@ for (let i = 0, len = groups.length; i < len; i++) {
   groups[i][1].sort((a, b) => byDateSort(a.items[0], b.items[0]));
 }
 
+// collect all items for 'all' feed
+const allItems = [];
+for (let [_groupName, feeds] of groups) {
+  for (let feed of feeds) {
+    for (let i = 0, len = feed.items.length; i < len; i++) {
+      allItems.push({ ...feed.items[i], feedUrl: new URL(feed.feedUrl).hostname });
+    }
+  }
+}
+
+allItems.sort((a, b) => byDateSort(a, b));
+
 const now = getNowDate(TIMEZONE_OFFSET).toString();
-const html = template({ groups, now, errors });
+const html = template({ allItems, groups, now, errors });
 writeFileSync(resolve('./output/index.html'), html, { encoding: 'utf8' });
 
 function byDateSort(dateStrA, dateStrB) {

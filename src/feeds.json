@@ -22,11 +22,12 @@
     "https://fasterthanli.me/index.xml",
     "https://lexi-lambda.github.io/feeds/all.rss.xml",
     "https://solarlune.itch.io/masterplan/devlog.rss",
-    "https://blog.axlight.com/index.xml"
+    "https://blog.axlight.com/index.xml",
+    "https://j3s.sh/feed.atom",
+    "https://icyphox.sh/blog/feed.xml"
   ],
   "reddit": [
     "https://www.reddit.com/r/gog.rss",
-    "https://www.reddit.com/r/Games.rss",
-    "https://www.reddit.com/r/AskHistorians.rss"
+    "https://www.reddit.com/r/Games.rss"
   ]
 }
