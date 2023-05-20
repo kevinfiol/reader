@@ -19,7 +19,7 @@ const REDIRECTS = {
   'twitter': 'notabird.site',
   'medium': 'scribe.rip',
   'youtube': 'youtube.com',
-  'youtu': 'youtube.com'
+  'youtu': 'youtu.be'
 };
 
 const FEED_CONTENT_TYPES = [
