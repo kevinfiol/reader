@@ -64,8 +64,8 @@ if (!DEV) {
 
         // try to normalize date attribute naming
         contents.items.forEach(item => {
-          const timestamp = new Date(item.pubDate || item.isoDate || item.date).getTime();
-          item.timestamp = isNaN(timestamp) ? (item.pubDate || item.isoDate || item.date) : timestamp;
+          const timestamp = new Date(item.pubDate || item.isoDate || item.date || item.published).getTime();
+          item.timestamp = isNaN(timestamp) ? (item.pubDate || item.isoDate || item.date || item.published) : timestamp;
 
           const formattedDate = new Date(item.timestamp).toLocaleDateString()
           item.timestamp = formattedDate !== 'Invalid Date' ? formattedDate : dateString;
