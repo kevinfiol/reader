@@ -16,7 +16,7 @@ const DEV = process.argv.includes('-d');
 const TIMEZONE_OFFSET = -4.0; // Default to EST
 
 const REDIRECTS = {
-  'twitter': 'nitter.at',
+  'twitter': 'unofficialbird.com',
   'medium': 'scribe.rip',
   'youtube': 'youtube.com',
   'youtu': 'youtu.be'
