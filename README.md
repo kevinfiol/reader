@@ -1,6 +1,6 @@
 # 🦉 Bubo Reader (Fork)
 
-![screenshot](./screenshot.png)
+![screenshot](./demo.png)
 
 [Example Site](https://kevinfiol.com/reader)
 
