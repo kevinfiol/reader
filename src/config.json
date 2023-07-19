@@ -1,6 +1,9 @@
 {
   "timezone_offset": -4.0,
   "redirects": {
-    "medium": "scribe.rip"
+    "twitter": "unofficialbird.com",
+    "medium": "scribe.rip",
+    "youtube": "yt.sheev.net",
+    "youtu": "yt.sheev.net"
   }
 }
