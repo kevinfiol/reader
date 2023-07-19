@@ -1,5 +1,9 @@
 # 🦉 Bubo Reader (Fork)
 
+![screenshot](./screenshot.png)
+
+[Example Site](https://kevinfiol.com/reader)
+
 This is a personal fork of the excellent [Bubo Reader](https://github.com/georgemandis/bubo-rss) by George Mandis. I've made several opinionated changes to the setup, including replacing dependencies with more compact alternatives. Please see the original repository for deployment instructions.
 
 Original blogpost: [Introducing Bubo RSS: An Absurdly Minimalist RSS Feed Reader](https://george.mand.is/2019/11/introducing-bubo-rss-an-absurdly-minimalist-rss-feed-reader/)
@@ -29,4 +33,4 @@ npm run build
 
 1. Fork this repo!
 2. Enable [Github Pages](https://pages.github.com/) for your repo (either as a project site, or user site)
-3. Configure `.github/workflows/build.yml` to your liking
+3. Configure `.github/workflows/build.yml` to your liking; 
