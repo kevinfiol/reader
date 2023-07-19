@@ -1,14 +1,34 @@
 {
   "feeds": [
-    "https://hnrss.org/frontpage?points=10&comments=5&count=35"
+    "https://hnrss.org/frontpage?points=10&comments=5&count=35",
+    "https://hnrss.org/best?count=35",
+    "https://retronauts.com/feed/rss",
+    "https://increment.com/feed.xml",
+    "https://handmade.network/podcast/podcast.xml"
   ],
   "blogs": [
     "https://xeiaso.net/blog.rss",
     "https://drewdevault.com/blog/index.xml",
+    "https://log.schemescape.com/feed.xml",
+    "https://marvinh.dev/feed.xml",
+    "https://zserge.com/rss.xml",
+    "https://blog.edwardloveall.com/rss",
+    "https://nickjanetakis.com/atom.xml",
     "https://danluu.com/atom.xml",
+    "https://egonelbre.com/index.xml",
     "https://kevinfiol.com/atom.xml",
+    "https://merelycurious.me/feed.xml",
+    "http://journal.stuffwithstuff.com/rss.xml",
+    "https://blog.skialbainn.com/rss",
     "https://terrysfreegameoftheweek.com/feed/",
-    "https://fasterthanli.me/index.xml"
+    "https://fasterthanli.me/index.xml",
+    "https://lexi-lambda.github.io/feeds/all.rss.xml",
+    "https://solarlune.itch.io/masterplan/devlog.rss",
+    "https://blog.axlight.com/index.xml",
+    "https://j3s.sh/feed.atom",
+    "https://icyphox.sh/blog/feed.xml",
+    "https://hashrust.com/rss.xml",
+    "https://solar.lowtechmagazine.com/index.xml"
   ],
   "reddit": [
     "https://www.reddit.com/r/Games.rss"
