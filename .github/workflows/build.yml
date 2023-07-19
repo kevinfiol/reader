@@ -3,10 +3,11 @@ on:
   push:
     branches:
       - main
-  schedule:
-    # Run this script every 1 hr
-    #  */m hr day month day_of_week
-    - cron:  '0 */1 * * *'
+  # Uncomment the section below to enable scheduled builds
+  # schedule:
+  #   # Run this script every 1 hr
+  #   #  */m hr day month day_of_week
+  #   - cron:  '0 */1 * * *'
   workflow_dispatch:
     inputs:
       tags:
