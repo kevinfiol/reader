@@ -1,10 +1,10 @@
 const forEach = (arr, fn) => {
-  let i, str = '';
-  for (i = 0; i < arr.length; i++) str += fn(arr[i]);
+  let str = '';
+  arr.forEach(i => str += fn(i) || '');
   return str;
 };
 
-const articleTemplate = (item) => `
+const article = (item) => `
   <article class="item">
     <header class="item__header">
       <a href="${item.link}" target='_blank' rel='noopener norefferer nofollow'>
@@ -66,7 +66,7 @@ export const template = ({ allItems, groups, errors, now }) => (`
         }
 
         <p>
-          Last updated ${now}. Powered by <a href="https://github.com/kevinfiol/bubo-rss">Bubo Reader</a>, a project by <a href="https://george.mand.is">George Mandis</a> and <a href="https://kevinfiol.com">Kevin Fiol</a>. <a href="https://github.com/kevinfiol/reader/actions/workflows/build.yml">Click here</a> to view builds.
+          Last updated ${now}. Powered by <a href="https://github.com/kevinfiol/bubo-rss">Bubo Reader</a>, a project by <a href="https://george.mand.is">George Mandis</a> and <a href="https://kevinfiol.com">Kevin Fiol</a>.
         </p>
       </footer>
     </div>
@@ -74,7 +74,7 @@ export const template = ({ allItems, groups, errors, now }) => (`
     <main>
       <section id="all-articles">
         <h2>all articles</h2>
-        ${forEach(allItems, item => articleTemplate(item))}
+        ${forEach(allItems, item => article(item))}
       </section>
 
       ${forEach(groups, ([groupName, feeds]) => `
@@ -94,7 +94,7 @@ export const template = ({ allItems, groups, errors, now }) => (`
                   <small>Latest: ${feed.items[0] && feed.items[0].timestamp || ''}</small>
                 </div>
               </summary>
-              ${forEach(feed.items, item => articleTemplate(item))}
+              ${forEach(feed.items, item => article(item))}
             </details>
           `)}
         </section>

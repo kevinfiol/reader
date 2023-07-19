@@ -1,3 +1,4 @@
 node_modules/*
 output/index.html
-src/data.json
+cache.json
+data.json

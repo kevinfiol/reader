@@ -4,16 +4,16 @@ on:
     branches:
       - main
   schedule:
-    # Run this script every 2 hrs
+    # Run this script every 1 hr
     #  */m hr day month day_of_week
-    - cron:  '0 */2 * * *'
+    - cron:  '0 */1 * * *'
   workflow_dispatch:
     inputs:
       tags:
         description: 'tag'  
 jobs:
   build-and-deploy:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
