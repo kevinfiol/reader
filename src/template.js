@@ -66,7 +66,7 @@ export const template = ({ allItems, groups, errors, now }) => (`
         }
 
         <p>
-          Last updated ${now}. Powered by <a href="https://github.com/kevinfiol/bubo-rss">Bubo Reader</a>, a project by <a href="https://george.mand.is">George Mandis</a> and <a href="https://kevinfiol.com">Kevin Fiol</a>.
+          Last updated ${now}. Powered by <a href="https://github.com/kevinfiol/rss-reader">Bubo Reader</a>, a project by <a href="https://george.mand.is">George Mandis</a> and <a href="https://kevinfiol.com">Kevin Fiol</a>.
         </p>
       </footer>
     </div>
