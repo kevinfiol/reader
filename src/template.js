@@ -20,7 +20,7 @@ const article = (item) => `
           <li><a href="${item.comments}" target='_blank' rel='noopener norefferer nofollow'>comments</a></li>
         ` : ''
         }
-        <li><a href="https://txtify.it/${item.link}" target='_blank' rel='noopener norefferer nofollow'>txtify</a></li>
+        <li><a href="https://ladder.sheev.net/${item.link}" target='_blank' rel='noopener norefferer nofollow'>txtify</a></li>
         <li><a href="https://archive.md/${item.link}" target='_blank' rel='noopener norefferer nofollow'>archive.md</a></li>
       </ul>
     </small>
