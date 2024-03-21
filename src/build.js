@@ -84,7 +84,7 @@ async function build({ config, feeds, cache, writeCache = false }) {
           throw Error(`Feed at ${url} contains no items.`)
 
         contents.feed = url;
-        contents.title = escapeHtml(contents.title || contents.link);
+        contents.title = contents.title || contents.link;
         groupContents[groupName].push(contents);
 
         // item sort & normalization
@@ -121,6 +121,9 @@ async function build({ config, feeds, cache, writeCache = false }) {
             const redirect = config.redirects[host];
             if (redirect) item.link = `https://${redirect}${url.pathname}${url.search}`;
           }
+
+          // 5. escape any html in the title
+          item.title = escapeHtml(item.title);
         });
 
         // add to allItems
