@@ -84,7 +84,7 @@ async function build({ config, feeds, cache, writeCache = false }) {
           throw Error(`Feed at ${url} contains no items.`)
 
         contents.feed = url;
-        contents.title = contents.title || contents.link;
+        contents.title = escapeHtml(contents.title || contents.link);
         groupContents[groupName].push(contents);
 
         // item sort & normalization
@@ -200,4 +200,12 @@ function readCfg(path) {
   }
 
   return json;
+}
+
+function escapeHtml(html) {
+  return html.replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('\'', '&apos;')
+    .replaceAll('"', '&quot;');
 }
