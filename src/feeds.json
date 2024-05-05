@@ -1,7 +1,6 @@
 {
   "feeds": [
-    "https://hnrss.org/frontpage?points=10&comments=5&count=35",
-    "https://hnrss.org/best?count=35",
+    "https://lobste.rs/rss",
     "https://retronauts.com/feed/rss",
     "https://increment.com/feed.xml",
     "https://handmade.network/podcast/podcast.xml"
@@ -27,7 +26,8 @@
     "https://blog.axlight.com/index.xml",
     "https://j3s.sh/feed.atom",
     "https://icyphox.sh/blog/feed.xml",
-    "https://hashrust.com/rss.xml"
+    "https://hashrust.com/rss.xml",
+    "https://svelte.dev/blog/rss.xml"
   ],
   "reddit": [
     "https://www.reddit.com/r/Games/.rss"
