@@ -1,7 +1,8 @@
 {
   "feeds": [
     "https://lobste.rs/rss",
-    "https://kadoa.com/api/hacksnack/rss/a013b22f-719c-470b-afc5-778436cc1181",
+    "https://hnrss.org/newest?points=20",
+    "https://hnrss.org/best",
     "https://retronauts.com/feed/rss",
     "https://increment.com/feed.xml",
     "https://handmade.network/podcast/podcast.xml"
