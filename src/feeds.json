@@ -5,7 +5,8 @@
     "https://hnrss.org/best",
     "https://retronauts.com/feed/rss",
     "https://increment.com/feed.xml",
-    "https://handmade.network/podcast/podcast.xml"
+    "https://handmade.network/podcast/podcast.xml",
+    "https://www.sun-sentinel.com/things-to-do/feed/"
   ],
   "blogs": [
     "https://xeiaso.net/blog.rss",
