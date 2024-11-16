@@ -5,8 +5,7 @@
     "https://hnrss.org/best",
     "https://retronauts.com/feed/rss",
     "https://increment.com/feed.xml",
-    "https://handmade.network/podcast/podcast.xml",
-    "https://www.sun-sentinel.com/things-to-do/feed/"
+    "https://handmade.network/podcast/podcast.xml"
   ],
   "blogs": [
     "https://xeiaso.net/blog.rss",
@@ -34,5 +33,9 @@
   ],
   "reddit": [
     "https://www.reddit.com/r/Games/.rss"
+  ],
+  "local": [
+    "https://www.sun-sentinel.com/things-to-do/feed/",
+    "https://weekendbroward.com/feed/"
   ]
 }
