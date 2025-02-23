@@ -27,7 +27,8 @@
     "https://j3s.sh/feed.atom",
     "https://icyphox.sh/blog/feed.xml",
     "https://hashrust.com/rss.xml",
-    "https://svelte.dev/blog/rss.xml"
+    "https://svelte.dev/blog/rss.xml",
+    "https://flitch.dev/keb/feed"
   ],
   "reddit": [
     "https://www.reddit.com/r/Games/.rss"
