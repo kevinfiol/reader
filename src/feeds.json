@@ -1,5 +1,6 @@
 {
   "feeds": [
+    "https://gamedev.city/rss",
     "https://lobste.rs/rss",
     "https://retronauts.com/feed/rss",
     "https://increment.com/feed.xml",
