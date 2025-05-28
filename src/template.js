@@ -27,7 +27,7 @@ const article = (item) => `
   </article>
 `;
 
-export const template = ({ allItems, groups, errors, now }) => (`
+export const template = ({ datedItems, dates, groups, errors, now }) => (`
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -74,7 +74,18 @@ export const template = ({ allItems, groups, errors, now }) => (`
     <main>
       <section id="all-articles">
         <h2>all articles</h2>
-        ${forEach(allItems, item => article(item))}
+        ${forEach(dates, date => {
+          const items = datedItems[date];
+
+          return `
+            <details open>
+              <summary>
+                <span class="feed-title">${date}</span> 
+              </summary>
+              ${forEach(items, item => article(item))}
+            </details>
+          `;
+        })}
       </section>
 
       ${forEach(groups, ([groupName, feeds]) => `

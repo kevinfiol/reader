@@ -135,6 +135,7 @@ summary {
   cursor:pointer;
   font-family: monospace;
   background-color: var(--bg-color);
+  z-index: 1;
 }
 
 summary:hover span,

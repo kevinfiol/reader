@@ -90,6 +90,8 @@ async function build({ config, feeds, cache, writeCache = false }) {
         // item sort & normalization
         contents.items.sort(byDateSort);
         contents.items.forEach((item) => {
+          item.feedUrl = contents.feedUrl;
+
           // 1. try to normalize date attribute naming
           const dateAttr = item.pubDate || item.isoDate || item.date || item.published;
           item.timestamp = new Date(dateAttr).toLocaleDateString();
@@ -151,11 +153,36 @@ async function build({ config, feeds, cache, writeCache = false }) {
     feeds.sort((a, b) => byDateSort(a.items[0], b.items[0]));
   });
 
+  // remove dupes from all articles
+  const exists = {};
+  const temp = [];
+  for (const item of allItems) {
+    if (exists[item.link]) {
+      exists[item.link].feedUrl += `, ${item.feedUrl}`;
+      continue;
+    }
+
+    temp.push(item);
+    exists[item.link] = item;
+  }
+
   // sort `all articles` view
-  allItems.sort((a, b) => byDateSort(a, b));
+  allItems = temp.toSorted((a, b) => byDateSort(a, b));
+
+  // group all articles by date
+  const datedItems = {};
+  const dates = [];
+  for (const item of allItems) {
+    if (!datedItems[item.timestamp]) {
+      dates.push(item.timestamp);
+      datedItems[item.timestamp] = [];
+    }
+
+    datedItems[item.timestamp].push(item);
+  }
 
   const now = getNowDate(config.timezone_offset).toString();
-  const html = template({ allItems, groups, now, errors });
+  const html = template({ datedItems, dates, groups, now, errors });
 
   writeFileSync(resolve(OUTFILE_PATH), html, { encoding: 'utf8' });
   console.log(`Reader built successfully at: ${OUTFILE_PATH}`);
