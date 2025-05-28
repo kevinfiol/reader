@@ -5,8 +5,9 @@
     "https://retronauts.com/feed/rss",
     "https://increment.com/feed.xml",
     "https://handmade.network/podcast/podcast.xml",
-    "https://ln.ht/_/feed/?v=popular",
-    "https://hnrss.org/best"
+    "https://ln.ht/_/feed/",
+    "https://hnrss.org/best",
+    "https://hnrss.org/newest?points=20&comments=2"
   ],
   "blogs": [
     "https://xeiaso.net/blog.rss",
