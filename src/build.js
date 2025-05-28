@@ -126,7 +126,7 @@ async function build({ config, feeds, cache, writeCache = false }) {
           }
 
           // 5. escape any html in the title
-          item.title = escapeHtml(item.title);
+          item.title = escapeHtml(item.title || '') || item.title;
         });
 
         // add to allItems
