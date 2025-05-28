@@ -80,7 +80,7 @@ export const template = ({ datedItems, dates, groups, errors, now }) => (`
           return `
             <details open>
               <summary>
-                <span class="feed-title">${date}</span> 
+                <span class="feed-title">${(new Date(date)).toDateString()}</span> 
               </summary>
               ${forEach(items, item => article(item))}
             </details>
