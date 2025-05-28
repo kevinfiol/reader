@@ -158,7 +158,10 @@ async function build({ config, feeds, cache, writeCache = false }) {
   const temp = [];
   for (const item of allItems) {
     if (exists[item.link]) {
-      exists[item.link].feedUrl += `, ${item.feedUrl}`;
+      if (!exists[item.link].feedUrl.includes(item.feedUrl)) {
+        exists[item.link].feedUrl += `, ${item.feedUrl}`;
+      }
+
       continue;
     }
 
