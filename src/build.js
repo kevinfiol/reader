@@ -20,6 +20,7 @@ const CONTENT_TYPES = [
   'application/json',
   'application/atom+xml',
   'application/rss+xml',
+  'application/x-rss+xml',
   'application/xml',
   'application/octet-stream',
   'text/xml'
