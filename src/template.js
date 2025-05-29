@@ -4,7 +4,7 @@ const forEach = (arr, fn) => {
   return str;
 };
 
-const article = (item) => `
+const article = (item, showFeedUrl = false) => `
   <article class="item">
     <header class="item__header">
       <a href="${item.link}" target='_blank' rel='noopener norefferer nofollow'>
@@ -13,7 +13,7 @@ const article = (item) => `
     </header>
 
     <small>
-      ${item.feedUrl ? `<span class="item__feed-url monospace">${item.feedUrl}</span>` : ''}
+      ${showFeedUrl && item.feedUrl ? `<span class="item__feed-url monospace">${item.feedUrl}</span>` : ''}
       <ul class="article-links">
         <li class="monospace">${item.timestamp || ''}</li>
         ${item.comments ? `
@@ -82,7 +82,7 @@ export const template = ({ datedItems, dates, groups, errors, now }) => (`
               <summary>
                 <span class="feed-title">${(new Date(date)).toDateString()}</span> 
               </summary>
-              ${forEach(items, item => article(item))}
+              ${forEach(items, item => article(item, true))}
             </details>
           `;
         })}
