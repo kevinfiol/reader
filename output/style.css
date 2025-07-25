@@ -249,6 +249,7 @@ ul.article-links > li {
 footer {
   opacity: 0.25;
   font-size: 0.75em;
+  font-family: monospace;
 }
 
 footer:hover {
