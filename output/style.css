@@ -220,6 +220,15 @@ article.item {
 
 article.item header.item__header {
   font-size: var(--title-font-size);
+  font-family: sans-serif;
+
+  a {
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
 }
 
 .item__feed-url {
@@ -229,6 +238,7 @@ article.item header.item__header {
 ul.article-links {
   list-style: none;
   padding-left: 0;
+  font-family: monospace;
 }
 
 ul.article-links > li {
