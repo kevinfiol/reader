@@ -2,5 +2,12 @@
   "timezone_offset": -4.0,
   "redirects": {
     "medium": "scribe.rip"
-  }
+  },
+  "ignore": [
+    "*nbcnews.com",
+    "*nytimes.com",
+    "*cnbc.com",
+    "*reuters.com",
+    "*theguardian.com"
+  ]
 }

@@ -10,6 +10,7 @@ import Parser from 'rss-parser';
 import { resolve } from 'node:path';
 import { readFileSync, writeFileSync } from 'node:fs';
 import { template } from './template.js';
+import { glob } from './globrex.js';
 
 const WRITE = process.argv.includes('--write');
 const USE_CACHE = !WRITE && process.argv.includes('--cached');
@@ -29,6 +30,10 @@ const CONTENT_TYPES = [
 const config = readCfg('./src/config.json');
 const feeds = USE_CACHE ? {} : readCfg('./src/feeds.json');
 const cache = USE_CACHE ? readCfg(CACHE_PATH) : {};
+
+// compile ignore expressions
+const ignores = config.ignore.map((pattern) => glob(pattern).regex);
+const checkIfIgnored = (url = '') => ignores.some((regex) => regex.test(url));
 
 await build({ config, feeds, cache, writeCache: WRITE })
   .then(() => {
@@ -91,6 +96,13 @@ async function build({ config, feeds, cache, writeCache = false }) {
         // item sort & normalization
         contents.items.sort(byDateSort);
         contents.items.forEach((item) => {
+          const url = new URL(item.link);
+
+          if (checkIfIgnored(url.hostname)) {
+            item.ignored = true;
+            return;
+          }
+
           item.feedUrl = contents.feedUrl;
 
           // 1. try to normalize date attribute naming
@@ -117,8 +129,6 @@ async function build({ config, feeds, cache, writeCache = false }) {
 
           // 4. redirects
           if (config.redirects) {
-            // need to parse hostname methodically due to unreliable feeds
-            const url = new URL(item.link);
             const tokens = url.hostname.split('.');
             const host = tokens[tokens.length - 2];
             const redirect = config.redirects[host];
@@ -128,6 +138,9 @@ async function build({ config, feeds, cache, writeCache = false }) {
           // 5. escape any html in the title
           item.title = escapeHtml(item.title || item.link);
         });
+
+        // filter out ignored items
+        contents.items = contents.items.filter((item) => !item.ignored);
 
         // add to allItems
         allItems = [...allItems, ...contents.items];
