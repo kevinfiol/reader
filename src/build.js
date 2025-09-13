@@ -96,20 +96,13 @@ async function build({ config, feeds, cache, writeCache = false }) {
         // item sort & normalization
         contents.items.sort(byDateSort);
         contents.items.forEach((item) => {
-          const url = new URL(item.link);
-
-          if (checkIfIgnored(url.hostname)) {
-            item.ignored = true;
-            return;
-          }
-
           item.feedUrl = contents.feedUrl;
 
-          // 1. try to normalize date attribute naming
+          // try to normalize date attribute naming
           const dateAttr = item.pubDate || item.isoDate || item.date || item.published;
           item.timestamp = new Date(dateAttr).toLocaleDateString();
 
-          // 2. correct link url if it lacks the hostname
+          // correct link url if it lacks the hostname
           if (item.link && item.link.split('http').length === 1) {
             item.link =
               // if the hostname ends with a /, and the item link begins with a /
@@ -118,7 +111,7 @@ async function build({ config, feeds, cache, writeCache = false }) {
                 : contents.link + item.link;
           }
 
-          // 3. parse subreddit feed comments
+          // parse subreddit feed comments
           if (isRedditRSS && item.contentSnippet && item.contentSnippet.startsWith('submitted by    ')) {
             // matches anything between double quotes, like `<a href="matches this">foo</a>`
             const quotesContentMatch = /(?<=")(?:\\.|[^"\\])*(?=")/g;
@@ -127,7 +120,14 @@ async function build({ config, feeds, cache, writeCache = false }) {
             item.comments = commentsLink.match(quotesContentMatch)[0];
           }
 
-          // 4. redirects
+          // create url object, and ignore if user configured host to be ignored
+          const url = new URL(item.link);
+          if (checkIfIgnored(url.hostname)) {
+            item.ignored = true;
+            return;
+          }
+
+          // apply redirects
           if (config.redirects) {
             const tokens = url.hostname.split('.');
             const host = tokens[tokens.length - 2];
@@ -135,7 +135,7 @@ async function build({ config, feeds, cache, writeCache = false }) {
             if (redirect) item.link = `https://${redirect}${url.pathname}${url.search}`;
           }
 
-          // 5. escape any html in the title
+          // escape any html in the title
           item.title = escapeHtml(item.title || item.link);
         });
 
