@@ -21,6 +21,11 @@
     "*forbes.com",
     "*house.gov",
     "*npr.org",
-    "*msn.com"
+    "*msn.com",
+    "*wsj.com",
+    "*arstechnica.com",
+    "*bloomberg.com",
+    "*bbc.*",
+    "*politico.*"
   ]
 }
