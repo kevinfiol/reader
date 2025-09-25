@@ -29,6 +29,7 @@
     "*politico.*",
     "*businessinsider.com",
     "*wired.com",
-    "*twz.com"
+    "*twz.com",
+    "*.gov"
   ]
 }
