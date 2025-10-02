@@ -30,6 +30,7 @@
     "*businessinsider.com",
     "*wired.com",
     "*twz.com",
-    "*.gov"
+    "*.gov",
+    "*yahoo.com"
   ]
 }
