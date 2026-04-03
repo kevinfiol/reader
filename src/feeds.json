@@ -9,6 +9,7 @@
     "https://hnrss.org/newest?points=20&comments=2"
   ],
   "blogs": [
+    "https://text.blogosphere.app/category/technology.xml",
     "https://xeiaso.net/blog.rss",
     "https://drewdevault.com/blog/index.xml",
     "https://log.schemescape.com/feed.xml",
