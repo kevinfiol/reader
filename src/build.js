@@ -14,6 +14,7 @@ import { glob } from './globrex.js';
 
 const WRITE = process.argv.includes('--write');
 const USE_CACHE = !WRITE && process.argv.includes('--cached');
+const TODAY = new Date();
 
 const CACHE_PATH = './src/cache.json';
 const OUTFILE_PATH = './output/index.html';
@@ -99,9 +100,10 @@ async function build({ config, feeds, cache, writeCache = false }) {
         contents.items.forEach((item) => {
           item.feedUrl = contents.feedUrl;
 
-          // try to normalize date attribute naming
-          const dateAttr = item.pubDate || item.isoDate || item.date || item.published;
-          item.timestamp = new Date(dateAttr).toLocaleDateString();
+          // try to normalize date
+          const itemDate = new Date(item.pubDate || item.isoDate || item.date || item.published);
+          const date = itemDate > TODAY ? TODAY : itemDate;
+          item.timestamp = date.toLocaleDateString();
 
           // correct link url if it lacks the hostname
           if (item.link && item.link.split('http').length === 1) {
