@@ -1,7 +1,5 @@
 {
   "name": "reader",
-  "version": "1.0.0",
-  "description": "A somewhat dumb but effective feed reader (RSS, JSON & Twitter)",
   "type": "module",
   "engines": {
     "node": ">=22.x"
@@ -11,8 +9,6 @@
     "write": "node src/build.js --write",
     "cached": "node src/build.js --cached"
   },
-  "author": "kevinfiol",
-  "license": "ISC",
   "dependencies": {
     "rss-parser": "^3.6.3"
   }

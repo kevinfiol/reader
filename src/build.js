@@ -24,7 +24,8 @@ const CONTENT_TYPES = [
   'application/x-rss+xml',
   'application/xml',
   'application/octet-stream',
-  'text/xml'
+  'text/xml',
+  'text/html'
 ];
 
 const config = readCfg('./src/config.json');
@@ -78,7 +79,7 @@ async function build({ config, feeds, cache, writeCache = false }) {
         const contentType = response.headers.get('content-type').split(';')[0];
 
         if (!CONTENT_TYPES.includes(contentType))
-          throw Error(`Feed at ${url} has invalid content-type.`)
+          throw Error(`Feed at ${url} has invalid content-type: ${contentType}`)
 
         const body = await response.text();
         const contents = typeof body === 'string'
@@ -137,6 +138,9 @@ async function build({ config, feeds, cache, writeCache = false }) {
 
           // escape any html in the title
           item.title = escapeHtml(item.title || item.link);
+
+          // turn comments prop into array
+          item.comments = [item.comments];
         });
 
         // filter out ignored items
@@ -175,6 +179,8 @@ async function build({ config, feeds, cache, writeCache = false }) {
       if (!exists[item.link].feedUrl.includes(item.feedUrl)) {
         exists[item.link].feedUrl += `, ${item.feedUrl}`;
       }
+
+      exists[item.link].comments.push(...item.comments);
 
       continue;
     }
