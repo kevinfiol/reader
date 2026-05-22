@@ -1,7 +1,44 @@
 {
   "feeds": [
     "https://lobste.rs/rss",
+    "https://retronauts.com/feed/rss",
+    "https://increment.com/feed.xml",
+    "https://handmade.network/podcast/podcast.xml",
     "https://hnrss.org/best",
     "https://hnrss.org/newest?points=20&comments=2"
+  ],
+  "blogs": [
+    "https://text.blogosphere.app/category/technology.xml",
+    "https://xeiaso.net/blog.rss",
+    "https://drewdevault.com/blog/index.xml",
+    "https://log.schemescape.com/feed.xml",
+    "https://marvinh.dev/feed.xml",
+    "https://zserge.com/rss.xml",
+    "https://blog.edwardloveall.com/rss",
+    "https://nickjanetakis.com/atom.xml",
+    "https://egonelbre.com/index.xml",
+    "https://kevinfiol.com/atom.xml",
+    "https://merelycurious.me/feed.xml",
+    "http://journal.stuffwithstuff.com/rss.xml",
+    "https://blog.skialbainn.com/rss",
+    "https://terrysfreegameoftheweek.com/feed/",
+    "https://fasterthanli.me/index.xml",
+    "https://lexi-lambda.github.io/feeds/all.rss.xml",
+    "https://blog.axlight.com/index.xml",
+    "https://j3s.sh/feed.atom",
+    "https://anirudh.fi/blog/feed.xml",
+    "https://hashrust.com/rss.xml",
+    "https://svelte.dev/blog/rss.xml",
+    "https://flitch.dev/keb/feed"
+  ],
+  "releases": [
+    "https://codeberg.org/GramEditor/gram/releases.rss",
+    "https://solarlune.itch.io/masterplan/devlog.rss"
+  ],
+  "reddit": [
+    "https://www.reddit.com/r/Games/.rss"
+  ],
+  "local": [
+    "https://weekendbroward.com/feed/"
   ]
 }
