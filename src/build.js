@@ -183,6 +183,7 @@ async function build({ config, feeds, cache, writeCache = false }) {
       }
 
       exists[item.link].comments.push(...item.comments);
+      exists[item.link].comments = Array.from(new Set(exists[item.link].comments.filter(Boolean))); // only uniques + filter out empties
 
       continue;
     }
