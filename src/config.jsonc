@@ -13,6 +13,24 @@
     "*japantimes.co.jp",
     "*kotaku.com",
     "*ft.com",
-    "*latimes.com"
+    "*latimes.com",
+    "*cnn.com",
+    "*polygon.com",
+    "*vulture.com",
+    "*apnews.com",
+    "*forbes.com",
+    "*house.gov",
+    "*npr.org",
+    "*msn.com",
+    "*wsj.com",
+    "*arstechnica.com",
+    "*bloomberg.com",
+    "*bbc.*",
+    "*politico.*",
+    "*businessinsider.com",
+    "*wired.com",
+    "*twz.com",
+    "*.gov",
+    "*yahoo.com"
   ]
 }

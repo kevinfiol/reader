@@ -1,7 +1,10 @@
-const forEach = (arr, fn) => {
-  let str = '';
-  arr.forEach(i => str += fn(i) || '');
-  return str;
+const _ = {
+  if: (condition, template) => condition ? template : '',
+  forEach: (arr, fn) => {
+    let i, str = '';
+    for (i = 0; i < arr.length; i++) str += fn(arr[i], i);
+    return str;
+  },
 };
 
 const article = (item, showFeedUrl = false) => `
@@ -13,13 +16,20 @@ const article = (item, showFeedUrl = false) => `
     </header>
 
     <small>
-      ${showFeedUrl && item.feedUrl ? `<span class="item__feed-url monospace">${item.feedUrl}</span>` : ''}
+      ${_.if(showFeedUrl && item.feedUrl, `
+        <span class="item__feed-url monospace">${item.feedUrl}</span>
+      `)}
+
       <ul class="article-links">
         <li class="monospace">${item.timestamp || ''}</li>
-        ${item.comments ? `
-          <li><a href="${item.comments}" target='_blank' rel='noopener norefferer nofollow'>comments</a></li>
-        ` : ''
-        }
+
+        ${_.forEach(item.comments, (link, i) => `
+          <li>
+            <a href="${link}" target='_blank' rel='noopener norefferer nofollow'>
+              comments${i > 0 ? ` (${i})` : ''}
+            </a>
+          </li>
+        `)}
 
         <li><a href="https://archive.md/${item.link}" target='_blank' rel='noopener norefferer nofollow'>archive.md</a></li>
       </ul>
@@ -47,22 +57,22 @@ export const template = ({ datedItems, dates, groups, errors, now }) => (`
         <h1 class="inline" style="user-select: none;">🦉</h1>
         <ul class="group-selector">
           <li><a href="#all-articles">all articles</a></li>
-          ${forEach(groups, group => `
+          ${_.forEach(groups, group => `
             <li><a href="#${group[0]}">${group[0]}</a></li>
           `)}
         </ul>
       </header>
 
       <footer>
-        ${errors.length > 0 ? `
+        ${_.if(errors.length > 0, `
           <h2>Errors</h2>
           <p>There were errors trying to parse these feeds:</p>
           <ul>
-          ${forEach(errors, error => `
+          ${_.forEach(errors, error => `
             <li>${error}</li>
           `)}
           </ul>
-        ` : ''
+        `)
         }
 
         <p>
@@ -74,28 +84,28 @@ export const template = ({ datedItems, dates, groups, errors, now }) => (`
     <main>
       <section id="all-articles">
         <h2>all articles</h2>
-        ${forEach(dates, date => {
+        ${_.forEach(dates, date => {
           const items = datedItems[date];
 
           return `
             <details open>
               <summary>
-                <span class="feed-title">${(new Date(date)).toDateString()}</span>
+                <span class="feed-title">${(new Date(date)).toDateString()}</span> 
               </summary>
-              ${forEach(items, item => article(item, true))}
+              ${_.forEach(items, item => article(item, true))}
             </details>
           `;
         })}
       </section>
 
-      ${forEach(groups, ([groupName, feeds]) => `
+      ${_.forEach(groups, ([groupName, feeds]) => `
         <section id="${groupName}">
           <h2>${groupName}</h2>
 
-          ${forEach(feeds, feed => `
+          ${_.forEach(feeds, feed => `
             <details>
               <summary>
-                <span class="feed-title">${feed.title}</span>
+                <span class="feed-title">${feed.title}</span> 
                 <span class="feed-url">
                   <small>
                     (${feed.feed})
@@ -105,7 +115,7 @@ export const template = ({ datedItems, dates, groups, errors, now }) => (`
                   <small>Latest: ${feed.items[0] && feed.items[0].timestamp || ''}</small>
                 </div>
               </summary>
-              ${forEach(feed.items, item => article(item))}
+              ${_.forEach(feed.items, item => article(item))}
             </details>
           `)}
         </section>

@@ -6,6 +6,7 @@ import { glob } from './globrex.js';
 
 const WRITE = Deno.args.includes('--write');
 const USE_CACHE = !WRITE && Deno.args.includes('--cached');
+const TODAY = new Date();
 
 const CACHE_PATH = './src/cache.json';
 const OUTFILE_PATH = './output/index.html';
@@ -17,6 +18,7 @@ const CONTENT_TYPES = [
   'application/xml',
   'application/octet-stream',
   'text/xml',
+  'text/html'
 ];
 
 const config = readCfg('./src/config.jsonc');
@@ -69,9 +71,8 @@ async function build({ config, feeds, cache, writeCache = false }) {
         // e.g., `application/xml; charset=utf-8` -> `application/xml`
         const contentType = response.headers.get('content-type').split(';')[0];
 
-        if (!CONTENT_TYPES.includes(contentType)) {
-          throw Error(`Feed at ${url} has invalid content-type.`);
-        }
+        if (!CONTENT_TYPES.includes(contentType))
+          throw Error(`Feed at ${url} has invalid content-type: ${contentType}`)
 
         const body = await response.text();
         const contents = typeof body === 'string'
@@ -93,10 +94,10 @@ async function build({ config, feeds, cache, writeCache = false }) {
         contents.items.forEach((item) => {
           item.feedUrl = contents.feedUrl;
 
-          // try to normalize date attribute naming
-          const dateAttr = item.pubDate || item.isoDate || item.date ||
-            item.published;
-          item.timestamp = new Date(dateAttr).toLocaleDateString();
+          // try to normalize date
+          const itemDate = new Date(item.pubDate || item.isoDate || item.date || item.published);
+          const date = itemDate > TODAY ? TODAY : itemDate;
+          item.timestamp = date.toLocaleDateString();
 
           // correct link url if it lacks the hostname
           if (item.link && item.link.split('http').length === 1) {
@@ -139,6 +140,9 @@ async function build({ config, feeds, cache, writeCache = false }) {
 
           // escape any html in the title
           item.title = escapeHtml(item.title || item.link);
+
+          // turn comments prop into array
+          item.comments = [item.comments];
         });
 
         // filter out ignored items
@@ -176,6 +180,9 @@ async function build({ config, feeds, cache, writeCache = false }) {
       if (!exists[item.link].feedUrl.includes(item.feedUrl)) {
         exists[item.link].feedUrl += `, ${item.feedUrl}`;
       }
+
+      exists[item.link].comments.push(...item.comments);
+      exists[item.link].comments = Array.from(new Set(exists[item.link].comments.filter(Boolean))); // only uniques + filter out empties
 
       continue;
     }
