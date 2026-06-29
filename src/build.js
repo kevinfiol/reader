@@ -18,7 +18,7 @@ const CONTENT_TYPES = [
   'application/xml',
   'application/octet-stream',
   'text/xml',
-  'text/html'
+  'text/html',
 ];
 
 const config = readCfg('./src/config.jsonc');
@@ -71,8 +71,11 @@ async function build({ config, feeds, cache, writeCache = false }) {
         // e.g., `application/xml; charset=utf-8` -> `application/xml`
         const contentType = response.headers.get('content-type').split(';')[0];
 
-        if (!CONTENT_TYPES.includes(contentType))
-          throw Error(`Feed at ${url} has invalid content-type: ${contentType}`)
+        if (!CONTENT_TYPES.includes(contentType)) {
+          throw Error(
+            `Feed at ${url} has invalid content-type: ${contentType}`,
+          );
+        }
 
         const body = await response.text();
         const contents = typeof body === 'string'
@@ -95,7 +98,9 @@ async function build({ config, feeds, cache, writeCache = false }) {
           item.feedUrl = contents.feedUrl;
 
           // try to normalize date
-          const itemDate = new Date(item.pubDate || item.isoDate || item.date || item.published);
+          const itemDate = new Date(
+            item.pubDate || item.isoDate || item.date || item.published,
+          );
           const date = itemDate > TODAY ? TODAY : itemDate;
           item.timestamp = date.toLocaleDateString();
 
@@ -142,7 +147,8 @@ async function build({ config, feeds, cache, writeCache = false }) {
           item.title = escapeHtml(item.title || item.link);
 
           // turn comments prop into array
-          item.comments = [item.comments];
+          // for links with comments on multiple feeds
+          item.comments = item.comments ? [item.comments] : [];
         });
 
         // filter out ignored items
@@ -177,13 +183,17 @@ async function build({ config, feeds, cache, writeCache = false }) {
   const temp = [];
   for (const item of allItems) {
     if (exists[item.link]) {
+      // append alternative containing feed in comma-delimited string
+      // for when multiple feeds contain the same link
+      // ex: `hnrss.org, reddit.com`
       if (!exists[item.link].feedUrl.includes(item.feedUrl)) {
         exists[item.link].feedUrl += `, ${item.feedUrl}`;
       }
 
+      // append extra comment links if they exist
       exists[item.link].comments.push(...item.comments);
-      exists[item.link].comments = Array.from(new Set(exists[item.link].comments.filter(Boolean))); // only uniques + filter out empties
-
+      const unique = new Set(exists[item.link].comments);
+      exists[item.link].comments = Array.from(unique);
       continue;
     }
 
