@@ -20,7 +20,7 @@ const article = (item, showFeedUrl = false) => `
           <li><a href="${item.comments}" target='_blank' rel='noopener norefferer nofollow'>comments</a></li>
         ` : ''
         }
-        <li><a href="https://r3ad.deno.dev/${item.link}" target='_blank' rel='noopener norefferer nofollow'>r3ad</a></li>
+
         <li><a href="https://archive.md/${item.link}" target='_blank' rel='noopener norefferer nofollow'>archive.md</a></li>
       </ul>
     </small>
@@ -80,7 +80,7 @@ export const template = ({ datedItems, dates, groups, errors, now }) => (`
           return `
             <details open>
               <summary>
-                <span class="feed-title">${(new Date(date)).toDateString()}</span> 
+                <span class="feed-title">${(new Date(date)).toDateString()}</span>
               </summary>
               ${forEach(items, item => article(item, true))}
             </details>
@@ -95,7 +95,7 @@ export const template = ({ datedItems, dates, groups, errors, now }) => (`
           ${forEach(feeds, feed => `
             <details>
               <summary>
-                <span class="feed-title">${feed.title}</span> 
+                <span class="feed-title">${feed.title}</span>
                 <span class="feed-url">
                   <small>
                     (${feed.feed})

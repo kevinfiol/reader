@@ -1,0 +1,22 @@
+{
+  "tasks": {
+    "build": "deno run -A src/build.js",
+    "write": "deno run -A src/build.js --write",
+    "cached": "deno run -A src/build.js --cached"
+  },
+  "imports": {
+    "@std/jsonc": "jsr:@std/jsonc@^1.0.2",
+    "@std/path": "jsr:@std/path@^1.1.5",
+    "rss-parser": "npm:rss-parser@^3.13.0"
+  },
+  "fmt": {
+    "useTabs": false,
+    "lineWidth": 80,
+    "indentWidth": 2,
+    "semiColons": true,
+    "singleQuote": true,
+    "proseWrap": "preserve",
+    "include": ["src/**/*.ts", "src/**/*.js"],
+    "exclude": ["src/**/template.js", "src/**/template.ts"]
+  },
+}

@@ -1,0 +1,45 @@
+// gram://docs/configuring-gram#settings-files
+{
+  "languages": {
+    "JavaScript": {
+      "format_on_save": "on",
+      "language_servers": [
+        "deno",
+        "!typescript-language-server",
+        "!vtsls",
+        "!eslint",
+      ],
+      "formatter": "language_server",
+    },
+    "TypeScript": {
+      "format_on_save": "on",
+      "language_servers": [
+        "deno",
+        "!typescript-language-server",
+        "!vtsls",
+        "!eslint",
+      ],
+      "formatter": "language_server",
+    },
+    "TSX": {
+      "format_on_save": "on",
+      "language_servers": [
+        "deno",
+        "!typescript-language-server",
+        "!vtsls",
+        "!eslint",
+      ],
+      "formatter": "language_server",
+    },
+    "HTML": {
+      "format_on_save": "on",
+      "language_servers": [
+        "deno",
+        "!typescript-language-server",
+        "!vtsls",
+        "!eslint",
+      ],
+      "formatter": "language_server",
+    }
+  },
+}

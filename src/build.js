@@ -1,19 +1,11 @@
-/**
- * 🦉 Bubo RSS Reader
- * ====
- * Dead, dead simple feed reader that renders an HTML
- * page with links to content from feeds organized by site
- *
- */
-
 import Parser from 'rss-parser';
-import { resolve } from 'node:path';
-import { readFileSync, writeFileSync } from 'node:fs';
+import { resolve } from '@std/path';
+import { parse as jsonParse } from '@std/jsonc';
 import { template } from './template.js';
 import { glob } from './globrex.js';
 
-const WRITE = process.argv.includes('--write');
-const USE_CACHE = !WRITE && process.argv.includes('--cached');
+const WRITE = Deno.args.includes('--write');
+const USE_CACHE = !WRITE && Deno.args.includes('--cached');
 
 const CACHE_PATH = './src/cache.json';
 const OUTFILE_PATH = './output/index.html';
@@ -24,11 +16,11 @@ const CONTENT_TYPES = [
   'application/x-rss+xml',
   'application/xml',
   'application/octet-stream',
-  'text/xml'
+  'text/xml',
 ];
 
-const config = readCfg('./src/config.json');
-const feeds = USE_CACHE ? {} : readCfg('./src/feeds.json');
+const config = readCfg('./src/config.jsonc');
+const feeds = USE_CACHE ? {} : readCfg('./src/feeds.jsonc');
 const cache = USE_CACHE ? readCfg(CACHE_PATH) : {};
 
 // compile ignore expressions
@@ -54,13 +46,13 @@ async function build({ config, feeds, cache, writeCache = false }) {
     groupContents[groupName] = [];
 
     const results = await Promise.allSettled(
-      Object.values(feeds[groupName]).map(url =>
+      Object.values(feeds[groupName]).map((url) =>
         fetch(url, { method: 'GET' })
-          .then(res => [url, res])
-          .catch(e => {
+          .then((res) => [url, res])
+          .catch((e) => {
             throw [url, e];
           })
-      )
+      ),
     );
 
     for (const result of results) {
@@ -77,17 +69,20 @@ async function build({ config, feeds, cache, writeCache = false }) {
         // e.g., `application/xml; charset=utf-8` -> `application/xml`
         const contentType = response.headers.get('content-type').split(';')[0];
 
-        if (!CONTENT_TYPES.includes(contentType))
-          throw Error(`Feed at ${url} has invalid content-type.`)
+        if (!CONTENT_TYPES.includes(contentType)) {
+          throw Error(`Feed at ${url} has invalid content-type.`);
+        }
 
         const body = await response.text();
         const contents = typeof body === 'string'
           ? await parser.parseString(body)
           : body;
-        const isRedditRSS = contents.feedUrl && contents.feedUrl.includes("reddit.com/r/");
+        const isRedditRSS = contents.feedUrl &&
+          contents.feedUrl.includes('reddit.com/r/');
 
-        if (!contents.items.length === 0)
-          throw Error(`Feed at ${url} contains no items.`)
+        if (!contents.items.length === 0) {
+          throw Error(`Feed at ${url} contains no items.`);
+        }
 
         contents.feed = url;
         contents.title = contents.title || contents.link;
@@ -99,7 +94,8 @@ async function build({ config, feeds, cache, writeCache = false }) {
           item.feedUrl = contents.feedUrl;
 
           // try to normalize date attribute naming
-          const dateAttr = item.pubDate || item.isoDate || item.date || item.published;
+          const dateAttr = item.pubDate || item.isoDate || item.date ||
+            item.published;
           item.timestamp = new Date(dateAttr).toLocaleDateString();
 
           // correct link url if it lacks the hostname
@@ -112,10 +108,14 @@ async function build({ config, feeds, cache, writeCache = false }) {
           }
 
           // parse subreddit feed comments
-          if (isRedditRSS && item.contentSnippet && item.contentSnippet.startsWith('submitted by    ')) {
+          if (
+            isRedditRSS && item.contentSnippet &&
+            item.contentSnippet.startsWith('submitted by    ')
+          ) {
             // matches anything between double quotes, like `<a href="matches this">foo</a>`
             const quotesContentMatch = /(?<=")(?:\\.|[^"\\])*(?=")/g;
-            let [_submittedBy, _userLink, contentLink, commentsLink] = item.content.split('<a href=');
+            const [_submittedBy, _userLink, contentLink, commentsLink] = item
+              .content.split('<a href=');
             item.link = contentLink.match(quotesContentMatch)[0];
             item.comments = commentsLink.match(quotesContentMatch)[0];
           }
@@ -132,7 +132,9 @@ async function build({ config, feeds, cache, writeCache = false }) {
             const tokens = url.hostname.split('.');
             const host = tokens[tokens.length - 2];
             const redirect = config.redirects[host];
-            if (redirect) item.link = `https://${redirect}${url.pathname}${url.search}`;
+            if (redirect) {
+              item.link = `https://${redirect}${url.pathname}${url.search}`;
+            }
           }
 
           // escape any html in the title
@@ -146,7 +148,7 @@ async function build({ config, feeds, cache, writeCache = false }) {
         allItems = [...allItems, ...contents.items];
       } catch (e) {
         console.error(e);
-        errors.push(url)
+        errors.push(url);
       }
     }
   }
@@ -154,10 +156,9 @@ async function build({ config, feeds, cache, writeCache = false }) {
   const groups = cache.groups || Object.entries(groupContents);
 
   if (writeCache) {
-    writeFileSync(
+    Deno.writeTextFileSync(
       resolve(CACHE_PATH),
       JSON.stringify({ groups, allItems }),
-      'utf8'
     );
   }
 
@@ -201,7 +202,7 @@ async function build({ config, feeds, cache, writeCache = false }) {
   const now = getNowDate(config.timezone_offset).toString();
   const html = template({ datedItems, dates, groups, now, errors });
 
-  writeFileSync(resolve(OUTFILE_PATH), html, { encoding: 'utf8' });
+  Deno.writeTextFileSync(resolve(OUTFILE_PATH), html);
   console.log(`Reader built successfully at: ${OUTFILE_PATH}`);
 }
 
@@ -209,10 +210,7 @@ async function build({ config, feeds, cache, writeCache = false }) {
  * utils
  */
 function parseDate(item) {
-  let date = item
-    ? (item.isoDate || item.pubDate)
-    : undefined;
-
+  const date = item ? (item.isoDate || item.pubDate) : undefined;
   return date ? new Date(date) : undefined;
 }
 
@@ -233,15 +231,15 @@ function readCfg(path) {
   let contents, json;
 
   try {
-    contents = readFileSync(resolve(path), { encoding: 'utf8' });
-  } catch (e) {
+    contents = Deno.readTextFileSync(resolve(path));
+  } catch (_e) {
     console.warn(`Warning: Config at ${path} does not exist`);
     return {};
   }
 
   try {
-    json = JSON.parse(contents);
-  } catch (e) {
+    json = jsonParse(contents);
+  } catch (_e) {
     console.error('Error: Config is Invalid JSON: ' + path);
     process.exit(1);
   }
@@ -253,6 +251,6 @@ function escapeHtml(html) {
   return html.replaceAll('&', '&amp;')
     .replaceAll('<', '&lt;')
     .replaceAll('>', '&gt;')
-    .replaceAll('\'', '&apos;')
+    .replaceAll("'", '&apos;')
     .replaceAll('"', '&quot;');
 }
