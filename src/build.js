@@ -7,6 +7,8 @@ import { glob } from './globrex.js';
 const WRITE = Deno.args.includes('--write');
 const USE_CACHE = !WRITE && Deno.args.includes('--cached');
 const TODAY = new Date();
+const SCRIPT_TIMEOUT = 5; // minutes
+const FETCH_TIMEOUT = 1; // minutes
 
 const CACHE_PATH = './src/cache.json';
 const OUTFILE_PATH = './output/index.html';
@@ -29,6 +31,12 @@ const cache = USE_CACHE ? readCfg(CACHE_PATH) : {};
 const ignores = config.ignore.map((pattern) => glob(pattern).regex);
 const checkIfIgnored = (url = '') => ignores.some((regex) => regex.test(url));
 
+// script timeout
+const scriptTimer = setTimeout(() => {
+  console.error(`Timed out after ${TIMEOUT} minutes`);
+  Deno.exit(1);
+}, SCRIPT_TIMEOUT * 60 * 1000);
+
 await build({ config, feeds, cache, writeCache: WRITE })
   .then(() => {
     process.exit(0);
@@ -36,7 +44,8 @@ await build({ config, feeds, cache, writeCache: WRITE })
   .catch((e) => {
     console.error(e);
     process.exit(1);
-  });
+  })
+  .finally(() => clearTimeout(scriptTimer));
 
 async function build({ config, feeds, cache, writeCache = false }) {
   let allItems = cache.allItems || [];
@@ -49,7 +58,10 @@ async function build({ config, feeds, cache, writeCache = false }) {
 
     const results = await Promise.allSettled(
       Object.values(feeds[groupName]).map((url) =>
-        fetch(url, { method: 'GET' })
+        fetch(url, {
+          method: 'GET',
+          signal: AbortSignal.timeout(FETCH_TIMEOUT * 60 * 1000),
+        })
           .then((res) => [url, res])
           .catch((e) => {
             throw [url, e];
@@ -128,6 +140,7 @@ async function build({ config, feeds, cache, writeCache = false }) {
 
           // create url object, and ignore if user configured host to be ignored
           const url = new URL(item.link);
+
           if (checkIfIgnored(url.hostname)) {
             item.ignored = true;
             return;
@@ -141,6 +154,10 @@ async function build({ config, feeds, cache, writeCache = false }) {
             if (redirect) {
               item.link = `https://${redirect}${url.pathname}${url.search}`;
             }
+          }
+
+          if (config.embedYoutubeLinks && isYouTube(url)) {
+            item.link = embedYoutubeLink(url);
           }
 
           // escape any html in the title
@@ -270,4 +287,20 @@ function escapeHtml(html) {
     .replaceAll('>', '&gt;')
     .replaceAll("'", '&apos;')
     .replaceAll('"', '&quot;');
+}
+
+function isYouTube(url) {
+  const { hostname } = url;
+  return hostname === 'youtube.com' ||
+    hostname === 'www.youtube.com' ||
+    hostname === 'youtu.be' ||
+    hostname === 'www.youtu.be';
+}
+
+function embedYoutubeLink(url) {
+  return `https://youtube.com/embed/${
+    url.hostname.includes('youtu.be')
+      ? url.pathname.slice(1)
+      : url.searchParams.get('v')
+  }`;
 }

@@ -1,7 +1,8 @@
 {
   "timezone_offset": -4.0,
+  "embedYoutubeLinks": true,
   "redirects": {
-    "medium": "scribe.rip"
+    "medium": "https://scribe.r4fo.com/"
   },
   "ignore": [
     "*nbcnews.com",
