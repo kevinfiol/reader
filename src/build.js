@@ -8,7 +8,7 @@ const WRITE = Deno.args.includes('--write');
 const USE_CACHE = !WRITE && Deno.args.includes('--cached');
 const TODAY = new Date();
 const SCRIPT_TIMEOUT = 5; // minutes
-const FETCH_TIMEOUT = 2; // minutes
+const FETCH_TIMEOUT = 1; // minutes
 
 const CACHE_PATH = './src/cache.json';
 const OUTFILE_PATH = './output/index.html';
@@ -33,7 +33,7 @@ const checkIfIgnored = (url = '') => ignores.some((regex) => regex.test(url));
 
 // script timeout
 const scriptTimer = setTimeout(() => {
-  console.error(`Timed out after ${TIMEOUT} minutes`);
+  console.error(`Timed out after ${SCRIPT_TIMEOUT} minutes`);
   Deno.exit(1);
 }, SCRIPT_TIMEOUT * 60 * 1000);
 
@@ -58,12 +58,12 @@ async function build({ config, feeds, cache, writeCache = false }) {
 
     const results = await Promise.allSettled(
       Object.values(feeds[groupName]).map((url) =>
-        // retryWithBackoff(() =>
-        fetch(url, {
-          method: 'GET',
-          signal: AbortSignal.timeout(FETCH_TIMEOUT * 60 * 1000),
-        })
-          // )
+        retryWithBackoff(() =>
+          fetch(url, {
+            method: 'GET',
+            signal: AbortSignal.timeout(FETCH_TIMEOUT * 60 * 1000),
+          })
+        )
           .then((res) => [url, res])
           .catch((e) => {
             throw [url, e];
