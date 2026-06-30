@@ -8,7 +8,6 @@ const WRITE = Deno.args.includes('--write');
 const USE_CACHE = !WRITE && Deno.args.includes('--cached');
 const TODAY = new Date();
 const SCRIPT_TIMEOUT = 5; // minutes
-const FETCH_TIMEOUT = 1; // minutes
 
 const CACHE_PATH = './src/cache.json';
 const OUTFILE_PATH = './output/index.html';
@@ -62,7 +61,6 @@ async function build({ config, feeds, cache, writeCache = false }) {
           retryWithBackoff(() =>
             fetch(url, {
               method: 'GET',
-              // signal: AbortSignal.timeout(FETCH_TIMEOUT * 60 * 1000),
             }), {
             log: (delay) => console.log(`retrying ${url} in ${delay}ms...`),
           })
