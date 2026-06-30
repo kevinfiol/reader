@@ -311,7 +311,7 @@ async function retryWithBackoff(
   fn,
   {
     log = () => {},
-    retries = 1,
+    retries = 3,
     initialDelay = 1_000,
     maxDelay = 5_000,
   } = {},
