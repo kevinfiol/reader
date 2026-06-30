@@ -62,7 +62,7 @@ async function build({ config, feeds, cache, writeCache = false }) {
           retryWithBackoff(() =>
             fetch(url, {
               method: 'GET',
-              signal: AbortSignal.timeout(FETCH_TIMEOUT * 60 * 1000),
+              // signal: AbortSignal.timeout(FETCH_TIMEOUT * 60 * 1000),
             }), {
             log: (delay) => console.log(`retrying ${url} in ${delay}ms...`),
           })
