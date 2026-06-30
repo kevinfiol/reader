@@ -58,10 +58,12 @@ async function build({ config, feeds, cache, writeCache = false }) {
 
     const results = await Promise.allSettled(
       Object.values(feeds[groupName]).map((url) =>
-        fetch(url, {
-          method: 'GET',
-          signal: AbortSignal.timeout(FETCH_TIMEOUT * 60 * 1000),
-        })
+        retryWithBackoff(() =>
+          fetch(url, {
+            method: 'GET',
+            signal: AbortSignal.timeout(FETCH_TIMEOUT * 60 * 1000),
+          })
+        )
           .then((res) => [url, res])
           .catch((e) => {
             throw [url, e];
@@ -303,4 +305,30 @@ function embedYoutubeLink(url) {
       ? url.pathname.slice(1)
       : url.searchParams.get('v')
   }`;
+}
+
+async function retryWithBackoff(
+  fn,
+  {
+    retries = 5,
+    initialDelay = 1_000,
+    maxDelay = 5_000,
+  } = {},
+) {
+  let delay = initialDelay;
+  let attempt = 0;
+
+  while (true) {
+    try {
+      return await fn();
+    } catch (e) {
+      if (attempt >= retries) {
+        throw e;
+      }
+
+      await new Promise((resolve) => setTimeout(resolve, delay));
+      delay = Math.min(delay * 2, maxDelay);
+      attempt += 1;
+    }
+  }
 }
