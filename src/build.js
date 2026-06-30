@@ -310,7 +310,7 @@ function embedYoutubeLink(url) {
 async function retryWithBackoff(
   fn,
   {
-    retries = 5,
+    retries = 3,
     initialDelay = 1_000,
     maxDelay = 5_000,
   } = {},
