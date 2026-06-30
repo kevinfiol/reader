@@ -57,17 +57,19 @@ async function build({ config, feeds, cache, writeCache = false }) {
     groupContents[groupName] = [];
 
     const results = await Promise.allSettled(
-      Object.values(feeds[groupName]).map((url) =>
-        retryWithBackoff(() =>
-          fetch(url, {
-            method: 'GET',
-            signal: AbortSignal.timeout(FETCH_TIMEOUT * 60 * 1000),
+      Object.values(feeds[groupName]).map(
+        (url) =>
+          retryWithBackoff(() =>
+            fetch(url, {
+              method: 'GET',
+              signal: AbortSignal.timeout(FETCH_TIMEOUT * 60 * 1000),
+            }), {
+            log: (delay) => console.log(`retrying ${url} in ${delay}ms...`),
           })
-        )
-          .then((res) => [url, res])
-          .catch((e) => {
-            throw [url, e];
-          })
+            .then((res) => [url, res])
+            .catch((e) => {
+              throw [url, e];
+            }),
       ),
     );
 
@@ -310,6 +312,7 @@ function embedYoutubeLink(url) {
 async function retryWithBackoff(
   fn,
   {
+    log = () => {},
     retries = 3,
     initialDelay = 1_000,
     maxDelay = 5_000,
@@ -326,6 +329,7 @@ async function retryWithBackoff(
         throw e;
       }
 
+      log(delay);
       await new Promise((resolve) => setTimeout(resolve, delay));
       delay = Math.min(delay * 2, maxDelay);
       attempt += 1;
