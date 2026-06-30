@@ -58,12 +58,12 @@ async function build({ config, feeds, cache, writeCache = false }) {
 
     const results = await Promise.allSettled(
       Object.values(feeds[groupName]).map((url) =>
-        retryWithBackoff(() =>
-          fetch(url, {
-            method: 'GET',
-            signal: AbortSignal.timeout(FETCH_TIMEOUT * 60 * 1000),
-          })
-        )
+        // retryWithBackoff(() =>
+        fetch(url, {
+          method: 'GET',
+          signal: AbortSignal.timeout(FETCH_TIMEOUT * 60 * 1000),
+        })
+          // )
           .then((res) => [url, res])
           .catch((e) => {
             throw [url, e];
