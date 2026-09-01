@@ -5,6 +5,7 @@
     "medium": "https://scribe.r4fo.com/"
   },
   "ignore": [
+    "*birchtree.me",
     "*nbcnews.com",
     "*nytimes.com",
     "*cnbc.com",
