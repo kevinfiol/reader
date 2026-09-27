@@ -5,8 +5,9 @@
     "medium": "https://scribe.r4fo.com/"
   },
   "ignore": [
-    "*marcthiele.com",
-    "*birchtree.me",
+    "*allenpike.com", // broken rss on text.blogosphere.app
+    "*marcthiele.com", // broken rss on text.blogosphere.app
+    "*birchtree.me", // paid articles
     "*nbcnews.com",
     "*nytimes.com",
     "*cnbc.com",
