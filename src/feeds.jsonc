@@ -39,7 +39,8 @@
   "vg": [
     "https://www.reddit.com/r/Games/.rss",
     "https://www.videogameschronicle.com/feed/",
-    "https://tildes.net/~games/topics.rss"
+    "https://tildes.net/~games/topics.rss",
+    "https://www.bluesnews.com/news/news_1_0.rdf"
   ],
   "local": [
     "https://weekendbroward.com/feed/"
