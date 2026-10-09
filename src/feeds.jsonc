@@ -36,8 +36,10 @@
     "https://codeberg.org/GramEditor/gram/releases.rss",
     "https://solarlune.itch.io/masterplan/devlog.rss"
   ],
-  "reddit": [
-    "https://www.reddit.com/r/Games/.rss"
+  "vg": [
+    "https://www.reddit.com/r/Games/.rss",
+    "https://www.videogameschronicle.com/feed/",
+    "https://tildes.net/~games/topics.rss"
   ],
   "local": [
     "https://weekendbroward.com/feed/"
