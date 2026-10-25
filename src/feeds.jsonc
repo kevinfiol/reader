@@ -40,7 +40,7 @@
     "https://www.reddit.com/r/Games/.rss",
     "https://www.videogameschronicle.com/feed/",
     "https://tildes.net/~games/topics.rss",
-    "https://www.bluesnews.com/news/news_1_0.rdf"
+    "https://www.bluesnews.com/news/atom.xml"
   ],
   "local": [
     "https://weekendbroward.com/feed/"
