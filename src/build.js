@@ -1,41 +1,44 @@
-import Parser from 'rss-parser';
-import JSONC from 'tiny-jsonc';
-import { resolve } from 'node:path';
-import { readFileSync, writeFileSync } from 'node:fs';
-import { template } from './template.js';
-import { glob } from './globrex.js';
+import Parser from "rss-parser";
+import JSONC from "tiny-jsonc";
+import { resolve } from "node:path";
+import { readFileSync, writeFileSync } from "node:fs";
+import { template } from "./template.js";
+import { glob } from "./globrex.js";
 
-const WRITE = process.argv.includes('--write');
-const USE_CACHE = !WRITE && process.argv.includes('--cached');
+const WRITE = process.argv.includes("--write");
+const USE_CACHE = !WRITE && process.argv.includes("--cached");
 const TODAY = new Date();
 const SCRIPT_TIMEOUT = 5; // minutes
 
-const CACHE_PATH = './src/cache.json';
-const OUTFILE_PATH = './output/index.html';
+const CACHE_PATH = "./src/cache.json";
+const OUTFILE_PATH = "./output/index.html";
 const CONTENT_TYPES = [
-  'application/json',
-  'application/atom+xml',
-  'application/rss+xml',
-  'application/x-rss+xml',
-  'application/xml',
-  'application/octet-stream',
-  'text/xml',
-  'text/html',
+  "application/json",
+  "application/atom+xml",
+  "application/rss+xml",
+  "application/x-rss+xml",
+  "application/xml",
+  "application/octet-stream",
+  "text/xml",
+  "text/html",
 ];
 
-const config = readCfg('./src/config.jsonc');
-const feeds = USE_CACHE ? {} : readCfg('./src/feeds.jsonc');
+const config = readCfg("./src/config.jsonc");
+const feeds = USE_CACHE ? {} : readCfg("./src/feeds.jsonc");
 const cache = USE_CACHE ? readCfg(CACHE_PATH) : {};
 
 // compile ignore expressions
 const ignores = config.ignore.map((pattern) => glob(pattern).regex);
-const checkIfIgnored = (url = '') => ignores.some((regex) => regex.test(url));
+const checkIfIgnored = (url = "") => ignores.some((regex) => regex.test(url));
 
 // script timeout
-const scriptTimer = setTimeout(() => {
-  console.error(`Timed out after ${SCRIPT_TIMEOUT} minutes`);
-  process.exit(1);
-}, SCRIPT_TIMEOUT * 60 * 1000);
+const scriptTimer = setTimeout(
+  () => {
+    console.error(`Timed out after ${SCRIPT_TIMEOUT} minutes`);
+    process.exit(1);
+  },
+  SCRIPT_TIMEOUT * 60 * 1000,
+);
 
 await build({ config, feeds, cache, writeCache: WRITE })
   .then(() => {
@@ -57,11 +60,10 @@ async function build({ config, feeds, cache, writeCache = false }) {
     groupContents[groupName] = [];
 
     const results = await Promise.allSettled(
-      Object.values(feeds[groupName]).map(
-        (url) =>
-          fetch(url, {
-            method: 'GET',
-          })
+      Object.values(feeds[groupName]).map((url) =>
+        fetch(url, {
+          method: "GET",
+        })
           .then((res) => [url, res])
           .catch((e) => {
             throw [url, e];
@@ -70,7 +72,7 @@ async function build({ config, feeds, cache, writeCache = false }) {
     );
 
     for (const result of results) {
-      if (result.status === 'rejected') {
+      if (result.status === "rejected") {
         const [url, error] = result.reason;
         errors.push(url);
         console.error(`Error fetching ${url}:\n`, error);
@@ -81,7 +83,7 @@ async function build({ config, feeds, cache, writeCache = false }) {
 
       try {
         // e.g., `application/xml; charset=utf-8` -> `application/xml`
-        const contentType = response.headers.get('content-type').split(';')[0];
+        const contentType = response.headers.get("content-type").split(";")[0];
 
         if (!CONTENT_TYPES.includes(contentType)) {
           throw Error(
@@ -90,11 +92,11 @@ async function build({ config, feeds, cache, writeCache = false }) {
         }
 
         const body = await response.text();
-        const contents = typeof body === 'string'
+        const contents = typeof body === "string"
           ? await parser.parseString(body)
           : body;
         const isRedditRSS = contents.feedUrl &&
-          contents.feedUrl.includes('reddit.com/r/');
+          contents.feedUrl.includes("reddit.com/r/");
 
         if (!contents.items.length === 0) {
           throw Error(`Feed at ${url} contains no items.`);
@@ -117,23 +119,24 @@ async function build({ config, feeds, cache, writeCache = false }) {
           item.timestamp = date.toLocaleDateString();
 
           // correct link url if it lacks the hostname
-          if (item.link && item.link.split('http').length === 1) {
+          if (item.link && item.link.split("http").length === 1) {
             item.link =
               // if the hostname ends with a /, and the item link begins with a /
-              contents.link.slice(-1) === '/' && item.link.slice(0, 1) === '/'
+              contents.link.slice(-1) === "/" && item.link.slice(0, 1) === "/"
                 ? contents.link + item.link.slice(1)
                 : contents.link + item.link;
           }
 
           // parse subreddit feed comments
           if (
-            isRedditRSS && item.contentSnippet &&
-            item.contentSnippet.startsWith('submitted by    ')
+            isRedditRSS &&
+            item.contentSnippet &&
+            item.contentSnippet.startsWith("submitted by    ")
           ) {
             // matches anything between double quotes, like `<a href="matches this">foo</a>`
             const quotesContentMatch = /(?<=")(?:\\.|[^"\\])*(?=")/g;
             const [_submittedBy, _userLink, contentLink, commentsLink] = item
-              .content.split('<a href=');
+              .content.split("<a href=");
             item.link = contentLink.match(quotesContentMatch)[0];
             item.comments = commentsLink.match(quotesContentMatch)[0];
           }
@@ -148,7 +151,7 @@ async function build({ config, feeds, cache, writeCache = false }) {
 
           // apply redirects
           if (config.redirects) {
-            const tokens = url.hostname.split('.');
+            const tokens = url.hostname.split(".");
             const host = tokens[tokens.length - 2];
             const redirect = config.redirects[host];
             if (redirect) {
@@ -183,10 +186,7 @@ async function build({ config, feeds, cache, writeCache = false }) {
   const groups = cache.groups || Object.entries(groupContents);
 
   if (writeCache) {
-    writeFileSync(
-      resolve(CACHE_PATH),
-      JSON.stringify({ groups, allItems }),
-    );
+    writeFileSync(resolve(CACHE_PATH), JSON.stringify({ groups, allItems }));
   }
 
   // for each group, sort the feeds
@@ -244,7 +244,7 @@ async function build({ config, feeds, cache, writeCache = false }) {
  * utils
  */
 function parseDate(item) {
-  const date = item ? (item.isoDate || item.pubDate) : undefined;
+  const date = item ? item.isoDate || item.pubDate : undefined;
   return date ? new Date(date) : undefined;
 }
 
@@ -256,8 +256,8 @@ function byDateSort(dateStrA, dateStrB) {
 
 function getNowDate(offset = 0) {
   let d = new Date();
-  const utc = d.getTime() + (d.getTimezoneOffset() * 60000);
-  d = new Date(utc + (3600000 * offset));
+  const utc = d.getTime() + d.getTimezoneOffset() * 60000;
+  d = new Date(utc + 3600000 * offset);
   return d;
 }
 
@@ -265,7 +265,7 @@ function readCfg(path) {
   let contents, json;
 
   try {
-    contents = readFileSync(resolve(path), 'utf8');
+    contents = readFileSync(resolve(path), "utf8");
   } catch (_e) {
     console.warn(`Warning: Config at ${path} does not exist`);
     return {};
@@ -274,7 +274,7 @@ function readCfg(path) {
   try {
     json = JSONC.parse(contents);
   } catch (_e) {
-    console.error('Error: Config is Invalid JSON: ' + path);
+    console.error("Error: Config is Invalid JSON: " + path);
     process.exit(1);
   }
 
@@ -282,53 +282,51 @@ function readCfg(path) {
 }
 
 function escapeHtml(html) {
-  return html.replaceAll('&', '&amp;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;')
-    .replaceAll("'", '&apos;')
-    .replaceAll('"', '&quot;');
+  return html
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll("'", "&apos;")
+    .replaceAll('"', "&quot;");
 }
 
 function isYouTube(url) {
   const { hostname } = url;
-  return hostname === 'youtube.com' ||
-    hostname === 'www.youtube.com' ||
-    hostname === 'youtu.be' ||
-    hostname === 'www.youtu.be';
+  return (
+    hostname === "youtube.com" ||
+    hostname === "www.youtube.com" ||
+    hostname === "youtu.be" ||
+    hostname === "www.youtu.be"
+  );
 }
 
 function embedYoutubeLink(url) {
   return `https://youtube.com/embed/${
-    url.hostname.includes('youtu.be')
+    url.hostname.includes("youtu.be")
       ? url.pathname.slice(1)
-      : url.searchParams.get('v')
+      : url.searchParams.get("v")
   }`;
 }
 
-async function retryWithBackoff(
-  fn,
-  {
-    log = () => {},
-    retries = 3,
-    initialDelay = 1_000,
-    maxDelay = 5_000,
-  } = {},
-) {
-  let delay = initialDelay;
-  let attempt = 0;
+// async function retryWithBackoff(
+//   fn,
+//   { log = () => {}, retries = 3, initialDelay = 1_000, maxDelay = 5_000 } = {},
+// ) {
+//   let delay = initialDelay;
+//   let attempt = 0;
 
-  while (true) {
-    try {
-      return await fn();
-    } catch (e) {
-      if (attempt >= retries) {
-        throw e;
-      }
+//   while (true) {
+//     try {
+//       return await fn();
+//     } catch (e) {
+//       if (attempt >= retries) {
+//         throw e;
+//       }
 
-      log(delay);
-      await new Promise((resolve) => setTimeout(resolve, delay));
-      delay = Math.min(delay * 2, maxDelay);
-      attempt += 1;
-    }
-  }
-}
+//       log(delay);
+//       await new Promise((resolve) => setTimeout(resolve, delay));
+//       delay = Math.min(delay * 2, maxDelay);
+//       attempt += 1;
+//     }
+//   }
+// }
