@@ -1,11 +1,12 @@
 import Parser from 'rss-parser';
-import { resolve } from '@std/path';
-import { parse as jsonParse } from '@std/jsonc';
+import JSONC from 'tiny-jsonc';
+import { resolve } from 'node:path';
+import { readFileSync, writeFileSync } from 'node:fs';
 import { template } from './template.js';
 import { glob } from './globrex.js';
 
-const WRITE = Deno.args.includes('--write');
-const USE_CACHE = !WRITE && Deno.args.includes('--cached');
+const WRITE = process.argv.includes('--write');
+const USE_CACHE = !WRITE && process.argv.includes('--cached');
 const TODAY = new Date();
 const SCRIPT_TIMEOUT = 5; // minutes
 
@@ -33,7 +34,7 @@ const checkIfIgnored = (url = '') => ignores.some((regex) => regex.test(url));
 // script timeout
 const scriptTimer = setTimeout(() => {
   console.error(`Timed out after ${SCRIPT_TIMEOUT} minutes`);
-  Deno.exit(1);
+  process.exit(1);
 }, SCRIPT_TIMEOUT * 60 * 1000);
 
 await build({ config, feeds, cache, writeCache: WRITE })
@@ -185,7 +186,7 @@ async function build({ config, feeds, cache, writeCache = false }) {
   const groups = cache.groups || Object.entries(groupContents);
 
   if (writeCache) {
-    Deno.writeTextFileSync(
+    writeFileSync(
       resolve(CACHE_PATH),
       JSON.stringify({ groups, allItems }),
     );
@@ -238,7 +239,7 @@ async function build({ config, feeds, cache, writeCache = false }) {
   const now = getNowDate(config.timezone_offset).toString();
   const html = template({ datedItems, dates, groups, now, errors });
 
-  Deno.writeTextFileSync(resolve(OUTFILE_PATH), html);
+  writeFileSync(resolve(OUTFILE_PATH), html);
   console.log(`Reader built successfully at: ${OUTFILE_PATH}`);
 }
 
@@ -267,14 +268,14 @@ function readCfg(path) {
   let contents, json;
 
   try {
-    contents = Deno.readTextFileSync(resolve(path));
+    contents = readFileSync(resolve(path), 'utf8');
   } catch (_e) {
     console.warn(`Warning: Config at ${path} does not exist`);
     return {};
   }
 
   try {
-    json = jsonParse(contents);
+    json = JSONC.parse(contents);
   } catch (_e) {
     console.error('Error: Config is Invalid JSON: ' + path);
     process.exit(1);

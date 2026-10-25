@@ -8,6 +8,7 @@
     "https://hnrss.org/newest?points=20&comments=2"
   ],
   "blogs": [
+    "https://fzakaria.com/feed.xml",
     "https://text.blogosphere.app/category/technology.xml",
     "https://xeiaso.net/blog.rss",
     "https://drewdevault.com/blog/index.xml",
@@ -35,8 +36,11 @@
     "https://codeberg.org/GramEditor/gram/releases.rss",
     "https://solarlune.itch.io/masterplan/devlog.rss"
   ],
-  "reddit": [
-    "https://www.reddit.com/r/Games/.rss"
+  "vg": [
+    "https://www.reddit.com/r/Games/.rss",
+    "https://www.videogameschronicle.com/feed/",
+    "https://tildes.net/~games/topics.rss",
+    "https://www.bluesnews.com/news/news_1_0.rdf"
   ],
   "local": [
     "https://weekendbroward.com/feed/"
