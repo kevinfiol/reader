@@ -1,0 +1,50 @@
+when:
+  - event: [push]
+    path:
+      include: [
+        '.woodpecker/*.yml',
+        'src/**/*.js',
+        'src/**/*.jsonc',
+        'output/style.css',
+        'package.json',
+        'pnpm-lock.yaml'
+      ]
+  - event: cron
+    cron: "auto-build"
+  - event: manual
+
+# use self-hosted agent
+labels:
+  host: elster
+
+steps:
+  - name: build site
+    image: docker.io/node:24-alpine
+    commands:
+      - npm install -g pnpm@12
+      - pnpm install --frozen-lockfile --prod
+      - pnpm build
+    environment:
+      YT_RANDOM_URL:
+        from_secret: YT_RANDOM_URL
+      YT_RANDOM_USER:
+        from_secret: YT_RANDOM_USER
+      YT_RANDOM_PASSWORD:
+        from_secret: YT_RANDOM_PASSWORD
+
+  - name: deploy-client
+    image: docker.io/node:24-alpine
+    commands:
+      # setup rsync
+      - apk add --no-cache rsync openssh
+      - echo -e "$PICO_KEY" > __TEMP_INPUT_KEY_FILE
+      - chmod 600 __TEMP_INPUT_KEY_FILE
+      - echo -e "$PICO_CERT_PUBKEY" > __TEMP_INPUT_CERT_PUBKEY
+      - chmod 600 __TEMP_INPUT_CERT_PUBKEY
+      # deploy
+      - rsync -rv -e "ssh -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -o CertificateFile=__TEMP_INPUT_CERT_PUBKEY -v -i __TEMP_INPUT_KEY_FILE" --delete ./output/ pgs.sh:/reader
+    environment:
+      PICO_KEY:
+        from_secret: PICO_KEY
+      PICO_CERT_PUBKEY:
+        from_secret: PICO_CERT_PUBKEY

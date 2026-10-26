@@ -1,7 +1,7 @@
 {
   "type": "module",
   "scripts": {
-    "build": "node --env-file-if-exists=.env src/build.js",
+    "build": "node src/build.js",
     "fmt": "oxfmt"
   },
   "dependencies": {
